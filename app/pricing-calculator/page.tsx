@@ -23,10 +23,14 @@ export default function PricingCalculatorPage() {
     }
 
     function val(id: string): number {
-      const el = document.getElementById(id) as HTMLInputElement | null;
-      const v = parseFloat(el && el.value);
-      return isNaN(v) ? 0 : v;
-    }
+  const el = document.getElementById(id) as HTMLInputElement | null;
+
+  if (!el) return 0; // if the element isn't found, treat as 0
+
+  const v = parseFloat(el.value || "0");
+  return isNaN(v) ? 0 : v;
+}
+
 
     function fmt(n: number): string {
       if (!isFinite(n)) n = 0;
