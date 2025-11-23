@@ -1,0 +1,50 @@
+[
+  {
+    "email": "alimostafahamed16@gmail.com",
+    "passwordHash": "7abybw591nl:TG9sb28zODgz",
+    "salt": "7abybw591nl",
+    "plan": "free"
+  },
+  {
+    "email": "itwillworkisa@gmail.com",
+    "passwordHash": "f8q1nw6iwot:MTIzNA==",
+    "salt": "f8q1nw6iwot",
+    "plan": "free"
+  },
+  {
+    "email": "yarabteshta3al@gmail.com",
+    "passwordHash": "jms4cksjn5:MTIzNA==",
+    "salt": "jms4cksjn5",
+    "plan": "free"
+  },
+  {
+    "email": "howisthisreal@gmail.com",
+    "passwordHash": "eek115vy664:MTIzNA==",
+    "salt": "eek115vy664",
+    "plan": "free"
+  },
+  {
+    "email": "alimostafahamedmostafa17@gmail.com",
+    "passwordHash": "pgyb04ur8e9:TG9sb28zODgz",
+    "salt": "pgyb04ur8e9",
+    "plan": "beginner"
+  },
+  {
+    "email": "alokaallcaps@gmail.com",
+    "passwordHash": "dqvw0sk6oze:MTIzNA==",
+    "salt": "dqvw0sk6oze",
+    "plan": "beginner"
+  },
+  {
+    "email": "lolsmostafa@gmail.com",
+    "passwordHash": "bqo9pfwh5m:MTIzNA==",
+    "salt": "bqo9pfwh5m",
+    "plan": "pro"
+  },
+  {
+    "email": "wowhownow@gmail.com",
+    "passwordHash": "pcfpv3ixo9g:MTIzNA==",
+    "salt": "pcfpv3ixo9g",
+    "plan": "pro"
+  }
+]

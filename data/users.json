@@ -1,0 +1,44 @@
+[
+  {
+    "email": "test@example.com",
+    "passwordHash": "dd0ae1d39607c6f37ec2aa54a5d9e8fe52de52ad27c863f3ff63fb5c286b8a433f83db4dacd1a31a34baa1088d446a3d13427460e6d34e6cf87088758ed40dfb",
+    "salt": "f3abe29069e4592eaca16ef66e54fb37",
+    "plan": "free"
+  },
+  {
+    "email": "exexampleex@gmail.com",
+    "passwordHash": "d66dd9f8c3efe147e4c892407a5198bea64a5be0f3eecf422cf3d38f18dba252ac7b77ef5f30346831231756eef293a760bb0cb86a5c4b1bf105d436a53d923c",
+    "salt": "cbfaecd821771e990e8d55b41d1f76a2",
+    "plan": "free"
+  },
+  {
+    "email": "exxexamplexe@gmail.com",
+    "passwordHash": "c9a00436c36b6c4693ba6a107a793808e3a17730d1dae523eb974dd2e46e472fc7c4eabc17278246fc17c758400bbf66b377b5d672c29f60cb8a9a7e2450a751",
+    "salt": "69a381eb3fea647e75ed590d898e4c20",
+    "plan": "free"
+  },
+  {
+    "email": "alimostafahamed7@gmail.com",
+    "passwordHash": "893618499be476237490a895d60b407a0d63e8d20ede96baac37a873515aa2535e7393a3775eb854e362ec3b609395a725084ab018c89b719c050d019627fbb9",
+    "salt": "8d985fe496e06043002154ce8b348533",
+    "plan": "free"
+  },
+  {
+    "email": "aeraeaes@gmail.com",
+    "passwordHash": "dd30e3bfc379cf800a5e582bc07cbde0fb6449d0837cf17f647a369147e982080c9bda738bd5c247ce4ec2e8ae23b7d3bdd60478b90949ee8c53f4f950c55706",
+    "salt": "1296bb525a6f33d79b771e638221c835",
+    "plan": "free"
+  },
+  {
+    "email": "alokatosh@gmail.com",
+    "passwordHash": "c1a28160dcceb98dacb89fe7deaad94736e6115391659b04146e648512dd214ebc40776089ef1b869b870c2f4c991fa039ce7a86bc50473b5e6c0d76f531e76e",
+    "salt": "0fbfcaf6bfeefbf35b6e79052ea3ecc6",
+    "plan": "free"
+  },
+  {
+    "email": "alokaoshos@gmail.com",
+    "passwordHash": "f4cc7b025eb91aa7901b90185711f9b4929aefbea8ac652083a7a1367f165362c06d03527dc8e0eeeb4c5a53ad2559b4f20af60adc9d1482e574bee4613507f0",
+    "salt": "9db768dd67a5ff7fe3634ceb8d8ac40d",
+    "plan": "free"
+  }
+]

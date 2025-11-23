@@ -1,0 +1,62 @@
+{
+  "alokaallcaps@gmail.com": [
+    {
+      "id": "901ca807-c28f-4af4-8313-7d0b276f5679",
+      "date": "2026-07-30",
+      "description": "second summer drop revenue",
+      "category": "sales",
+      "amount": 5000
+    }
+  ],
+  "wowhownow@gmail.com": [
+    {
+      "id": "f948e0c1-0f3d-4906-9927-334020b3ca72",
+      "date": "2025-08-15",
+      "description": "knitted drop revenue",
+      "category": "sales",
+      "amount": 54000
+    },
+    {
+      "id": "8338fed8-f848-4f58-8d4f-abf5198389ae",
+      "date": "2025-08-15",
+      "description": "cost of fabric for winter drop",
+      "category": "c_mat",
+      "amount": 60000
+    },
+    {
+      "id": "d509f1cf-0cae-40bb-b1fb-7ddf8264a329",
+      "date": "2026-07-30",
+      "description": "net profit of the second summer drop",
+      "category": "drawings",
+      "amount": 850000
+    },
+    {
+      "id": "9c9e7fa7-93c3-4c45-8499-ff9b7670b1e7",
+      "date": "2025-11-10",
+      "description": "net profit of the first winter drop",
+      "category": "drawings",
+      "amount": 3500000
+    },
+    {
+      "id": "8dd2eda6-7cd4-4bd1-9189-28dcbd510514",
+      "date": "2025-11-10",
+      "description": "revenue of first winter drop",
+      "category": "sales",
+      "amount": 6000000
+    },
+    {
+      "id": "8cefef1a-edfe-4d0d-83aa-7f0c32258cbf",
+      "date": "2025-11-10",
+      "description": "cost of materials for the first winter drop",
+      "category": "c_mat",
+      "amount": 500000
+    },
+    {
+      "id": "450a3c3c-8064-4d41-868a-0d78df8eaca8",
+      "date": "2025-11-10",
+      "description": "rent for this month",
+      "category": "o_rent",
+      "amount": 300000
+    }
+  ]
+}
