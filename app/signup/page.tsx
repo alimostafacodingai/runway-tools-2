@@ -1,27 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Plan = "free" | "beginner" | "pro";
 
-export default function SignupPage() {
+function SignUpInner() {
   const router = useRouter();
-  const search = useSearchParams();
 
-  // Read ?plan= from the URL. If missing, treat as free.
-  const rawPlan = search.get("plan");
-  const plan: Plan = (rawPlan as Plan) || "free";
-
-  // Where to go after signup
-  const next = search.get("next") || "/login";
-
+  const [plan, setPlan] = useState<Plan>("free");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  async function handleSignup(e: React.FormEvent) {
+  async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -30,99 +23,137 @@ export default function SignupPage() {
       const res = await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // 👇 VERY IMPORTANT: send plan to backend
-        body: JSON.stringify({
-          email,
-          password,
-          plan,
-        }),
+        body: JSON.stringify({ email, password, plan }),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
-        setError(data.error || "Signup failed");
-        return;
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Sign-up failed");
       }
 
-      if (plan === "beginner" || plan === "pro") {
-        alert(
-          "Account created! Use the SAME email on the Whop checkout page to activate your plan."
-        );
-      }
+      // redirect based on chosen plan
+      let redirect = "/plans";
+      if (plan === "pro") redirect = "/pro-plan";
+      else if (plan === "beginner") redirect = "/beginner-plan";
+      else if (plan === "free") redirect = "/free-plan";
 
-      router.push(next);
-    } catch (err) {
-      console.error(err);
-      setError("Server error. Try again.");
+      router.push(redirect);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-16 flex flex-col items-center">
-      <h1 className="text-4xl font-bold mb-6 text-center">
-        Create your account
-      </h1>
+    <main className="min-h-screen bg-black text-white px-6 py-10">
+      <section className="max-w-md mx-auto space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold mb-3">
+            Create your Runway Tools account
+          </h1>
+          <p className="text-zinc-400 text-sm">
+            Choose a plan, then sign up with your email and password.
+          </p>
+        </div>
 
-      <p className="text-white/70 mb-10 text-center max-w-md">
-        {plan === "free" &&
-          "You're creating a free Runway Tools account."}
-        {plan === "beginner" &&
-          "You're creating an account to buy the Beginner Plan (250 EGP)."}
-        {plan === "pro" &&
-          "You're creating an account to buy the Pro Plan (300 EGP)."}
-      </p>
+        {/* Plan selector */}
+        <div className="grid gap-3">
+          <button
+            type="button"
+            onClick={() => setPlan("free")}
+            className={`w-full rounded-xl border px-4 py-3 text-left text-sm ${
+              plan === "free"
+                ? "border-white bg-zinc-900"
+                : "border-zinc-700 bg-zinc-950"
+            }`}
+          >
+            <div className="font-semibold">Free Plan</div>
+            <div className="text-xs text-zinc-400">
+              Try the core tools and templates.
+            </div>
+          </button>
 
-      <form
-        onSubmit={handleSignup}
-        className="bg-zinc-900 p-8 rounded-2xl border border-white/10 w-full max-w-md space-y-4"
-      >
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-3 rounded-lg bg-zinc-800 border border-white/10 text-white outline-none"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          <button
+            type="button"
+            onClick={() => setPlan("beginner")}
+            className={`w-full rounded-xl border px-4 py-3 text-left text-sm ${
+              plan === "beginner"
+                ? "border-white bg-zinc-900"
+                : "border-zinc-700 bg-zinc-950"
+            }`}
+          >
+            <div className="font-semibold">Beginner Plan</div>
+            <div className="text-xs text-zinc-400">
+              Full basic calculators and templates.
+            </div>
+          </button>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-3 rounded-lg bg-zinc-800 border border-white/10 text-white outline-none"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <button
+            type="button"
+            onClick={() => setPlan("pro")}
+            className={`w-full rounded-xl border px-4 py-3 text-left text-sm ${
+              plan === "pro"
+                ? "border-white bg-zinc-900"
+                : "border-zinc-700 bg-zinc-950"
+            }`}
+          >
+            <div className="font-semibold">Pro Plan</div>
+            <div className="text-xs text-zinc-400">
+              All tools, dashboards and AI Pro.
+            </div>
+          </button>
+        </div>
 
-        {/* Debug view – shows what plan is being sent */}
-        <p className="text-xs text-white/40">
-          Plan being sent: <span className="font-mono">{plan}</span>
-        </p>
+        {/* Sign-up form */}
+        <form onSubmit={handleSignUp} className="space-y-4">
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">Email</label>
+            <input
+              type="email"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">Password</label>
+            <input
+              type="password"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-200 disabled:opacity-60 transition"
-        >
-          {loading ? "Creating account..." : "Continue"}
-        </button>
-      </form>
+          {error && <p className="text-sm text-red-400">{error}</p>}
 
-      <p className="mt-4 text-sm text-white/60 text-center">
-        Already have an account?{" "}
-        <button
-          type="button"
-          onClick={() => router.push(`/login?next=${next}`)}
-          className="underline hover:text-white"
-        >
-          Log in
-        </button>
-      </p>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-lg bg-white text-black text-sm font-semibold py-2 hover:bg-zinc-200 transition disabled:opacity-60"
+          >
+            {loading ? "Creating account..." : "Create account"}
+          </button>
+        </form>
+      </section>
     </main>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black text-white flex items-center justify-center">
+          Loading…
+        </div>
+      }
+    >
+      <SignUpInner />
+    </Suspense>
   );
 }
