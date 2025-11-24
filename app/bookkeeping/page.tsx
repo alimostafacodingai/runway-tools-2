@@ -88,31 +88,38 @@ export default function BookkeepingPage() {
 
   // Load from backend on mount
   useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch("/api/bookkeeping");
-        if (res.status === 401) {
-          // Not logged in: send to login, then back here
-          router.push("/login?next=/bookkeeping");
-          return;
-        }
-        if (!res.ok) {
-          setError("Could not load your bookkeeping data.");
-          return;
-        }
-        const data = await res.json();
-        setTransactions(data);
-        recomputeSummary(data);
-      } catch (err) {
-        console.error(err);
-        setError("Server error while loading bookkeeping.");
-      } finally {
-        setLoading(false);
-      }
-    }
+  async function load() {
+    try {
+      setLoading(true);
+      setError("");
 
-    load();
-  }, [router]);
+      const res = await fetch("/api/bookkeeping");
+      if (!res.ok) {
+        setError("Could not load your bookkeeping data.");
+        return;
+      }
+
+      const json = await res.json();
+
+      // ✅ our API returns { entries: [...] }
+      const data: BookEntry[] = Array.isArray(json.entries)
+        ? json.entries
+        : [];
+
+      // ✅ this is the only place we set transactions
+      setTransactions(data);
+      recomputeSummary(data);
+    } catch (err) {
+      console.error(err);
+      setError("Server error while loading bookkeeping.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  load();
+}, []); // <-- no router in the dependency array
+
 
   function recomputeSummary(list: BookEntry[]) {
     const t: Totals = { ...initialTotals };
