@@ -1,151 +1,113 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 type BookEntry = {
   id: string;
-  date: string;
+  date: string; // YYYY-MM-DD
   description: string;
   category: string;
   amount: number;
 };
 
-type Totals = {
-  sales: number;
-  c_mat: number;
-  c_lab: number;
-  c_pack: number;
-  c_inb: number;
-  c_other: number;
-  o_mkt: number;
-  o_web: number;
-  o_rent: number;
-  o_sal: number;
-  o_other: number;
-  drawings: number;
-};
+type Totals = Record<string, number>;
 
-const SYMBOL = "E£";
+const CATEGORIES: { id: string; label: string }[] = [
+  { id: "sales", label: "Sales revenue (use in Sales Total)" },
 
-const initialTotals: Totals = {
-  sales: 0,
-  c_mat: 0,
-  c_lab: 0,
-  c_pack: 0,
-  c_inb: 0,
-  c_other: 0,
-  o_mkt: 0,
-  o_web: 0,
-  o_rent: 0,
-  o_sal: 0,
-  o_other: 0,
-  drawings: 0,
-};
+  // COGS
+  { id: "c_mat", label: "Materials / Fabric (c_mat)" },
+  { id: "c_lab", label: "Labor / Production (c_lab)" },
+  { id: "c_pack", label: "Packaging & Labels (c_pack)" },
+  { id: "c_inb", label: "Inbound Shipping (c_inb)" },
+  { id: "c_other", label: "Other Product Costs (c_other)" },
 
-function money(n: number) {
-  if (!isFinite(n)) n = 0;
-  return (
-    SYMBOL +
-    Number(n).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })
-  );
+  // OPEX
+  { id: "o_mkt", label: "Marketing / Ads (o_mkt)" },
+  { id: "o_web", label: "Website & Apps (o_web)" },
+  { id: "o_rent", label: "Rent (o_rent)" },
+  { id: "o_salary", label: "Salaries & Staff (o_salary)" },
+  { id: "o_other", label: "Other OPEX (o_other)" },
+
+  // Owner
+  { id: "owner", label: "Owner's withdrawals / drawings" },
+];
+
+function recomputeTotals(list: BookEntry[]): Totals {
+  const totals: Totals = {};
+  for (const tx of list) {
+    const key = tx.category || "other";
+    totals[key] = (totals[key] ?? 0) + tx.amount;
+  }
+  return totals;
 }
 
-function categoryLabel(cat: string) {
-  const map: Record<string, string> = {
-    sales: "Sales revenue",
-    c_mat: "COGS – Materials / Fabric",
-    c_lab: "COGS – Labor / Production",
-    c_pack: "COGS – Packaging & Labels",
-    c_inb: "COGS – Inbound Shipping",
-    c_other: "COGS – Other Product Costs",
-    o_mkt: "OPEX – Marketing / Ads",
-    o_web: "OPEX – Website & Apps",
-    o_rent: "OPEX – Rent / Utilities",
-    o_sal: "OPEX – Salaries / Freelancers",
-    o_other: "OPEX – Other Operating Expenses",
-    drawings: "Owner's Withdrawals",
-  };
-  return map[cat] || cat;
+function formatMoney(n: number | undefined): string {
+  const value = n ?? 0;
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export default function BookkeepingPage() {
-  const router = useRouter();
-
-  const [transactions, setTransactions] = useState<BookEntry[]>([]);
-  const [totals, setTotals] = useState<Totals>(initialTotals);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
   // Form state
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("sales");
+  const [category, setCategory] = useState<string>("sales");
   const [amount, setAmount] = useState("");
+
+  // Data state
+  const [transactions, setTransactions] = useState<BookEntry[]>([]);
+  const [totals, setTotals] = useState<Totals>({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Load from backend on mount
   useEffect(() => {
-  async function load() {
-    try {
-      setLoading(true);
-      setError("");
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const res = await fetch("/api/bookkeeping");
-      if (!res.ok) {
-        setError("Could not load your bookkeeping data.");
-        return;
-      }
+        const res = await fetch("/api/bookkeeping");
+        if (!res.ok) {
+          setError("Could not load your bookkeeping data.");
+          return;
+        }
 
-      const json = await res.json();
+        const json = await res.json();
+        const data: BookEntry[] = Array.isArray(json.entries)
+          ? json.entries
+          : [];
 
-      // ✅ our API returns { entries: [...] }
-      const data: BookEntry[] = Array.isArray(json.entries)
-        ? json.entries
-        : [];
-
-      // ✅ this is the only place we set transactions
-      setTransactions(data);
-      recomputeSummary(data);
-    } catch (err) {
-      console.error(err);
-      setError("Server error while loading bookkeeping.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  load();
-}, []); // <-- no router in the dependency array
-
-
-  function recomputeSummary(list: BookEntry[]) {
-    const t: Totals = { ...initialTotals };
-    for (const tx of list) {
-      if (tx.category in t) {
-        // @ts-ignore – we know category matches keys
-        t[tx.category] += tx.amount;
+        setTransactions(data);
+        setTotals(recomputeTotals(data));
+      } catch (err) {
+        console.error("Error loading bookkeeping:", err);
+        setError("Server error while loading bookkeeping.");
+      } finally {
+        setLoading(false);
       }
     }
-    setTotals(t);
-  }
+
+    load();
+  }, []);
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
+    setError(null);
 
     const amountNum = parseFloat(amount);
-    if (!date || !description.trim() || !amount || isNaN(amountNum)) {
+    if (!date || !description.trim() || Number.isNaN(amountNum)) {
       setError("Please fill date, description, and a valid amount.");
       return;
     }
 
     const entry: BookEntry = {
       id:
-        typeof crypto !== "undefined" && crypto.randomUUID
-          ? crypto.randomUUID()
+        typeof crypto !== "undefined" && (crypto as any).randomUUID
+          ? (crypto as any).randomUUID()
           : Date.now().toString(36) + Math.random().toString(36).slice(2),
       date,
       description: description.trim(),
@@ -154,9 +116,9 @@ export default function BookkeepingPage() {
     };
 
     // 1) Optimistic UI
-    setTransactions((prev) => {
+    setTransactions(prev => {
       const updated = [...prev, entry];
-      recomputeSummary(updated);
+      setTotals(recomputeTotals(updated));
       return updated;
     });
 
@@ -165,495 +127,263 @@ export default function BookkeepingPage() {
       const res = await fetch("/api/bookkeeping", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ entry }),
+        body: JSON.stringify(entry),
       });
 
       if (!res.ok) {
         console.error("Failed to save entry:", await res.text());
-        setError("Could not save entry to server.");
+        setError("Could not save entry to server (but it was added locally).");
       } else {
-        // reset some fields
-        setAmount("");
-        setDescription("");
+        // all good
       }
+
+      // reset form
+      setAmount("");
+      setDescription("");
     } catch (err) {
-      console.error(err);
-      setError("Server error while saving entry.");
+      console.error("Server error while saving entry:", err);
+      setError("Server error while saving entry (but it was added locally).");
     }
   }
 
-  async function handleClearAll() {
-    if (!confirm("Clear all bookkeeping transactions?")) return;
-
-    // Optional: if you later add DELETE /api/bookkeeping, call it here.
-    // For now we just clear in memory, you can upgrade backend later.
+  function handleClearAll() {
+    if (!confirm("Clear all bookkeeping transactions (local view only)?")) {
+      return;
+    }
     setTransactions([]);
-    recomputeSummary([]);
-    // TODO (later): call DELETE /api/bookkeeping to clear server data.
+    setTotals({});
+    // If you want, you can later add a DELETE /api/bookkeeping route
   }
 
   return (
-    <main className="rtr-bookkeeping-page">
-      {/* Scoped styles based on your CodePen CSS */}
-      <style jsx>{`
-        :root {
-          --bg: #0f1226;
-          --card: #141834;
-          --muted: #a4a9c8;
-          --text: #e9ecff;
-          --accent: #7c5cff;
-          --accent2: #00d4ff;
-          --border: rgba(255, 255, 255, 0.08);
-          --radius: 16px;
-        }
-        .rtr-bookkeeping-page {
-          min-height: 100vh;
-          padding: 28px;
-          font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-            Roboto, Helvetica, Arial;
-          background:
-            radial-gradient(1200px 800px at 0% 0%, #251b63 0%, transparent 60%),
-            radial-gradient(1200px 800px at 100% 0%, #0b6c9a33 0%, transparent 60%),
-            var(--bg);
-          color: var(--text);
-          line-height: 1.45;
-        }
-        .rtr-bookkeeping-page h1 {
-          margin: 0 0 8px 0;
-          font-size: 26px;
-        }
-        .sub {
-          color: var(--muted);
-          margin-top: 0;
-        }
-        .grid {
-          display: grid;
-          gap: 18px;
-          grid-template-columns: 2fr 1.4fr;
-        }
-        @media (max-width: 900px) {
-          .grid {
-            grid-template-columns: 1fr;
-          }
-        }
-        .card {
-          background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.03),
-            rgba(255, 255, 255, 0.01)
-          );
-          border-radius: var(--radius);
-          padding: 18px;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35),
-            inset 0 0 0 1px var(--border);
-          backdrop-filter: blur(4px);
-        }
-        .cardHeader {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-          margin: -4px 0 10px 0;
-        }
-        .title {
-          font-weight: 700;
-          letter-spacing: 0.2px;
-          background: linear-gradient(90deg, var(--accent), var(--accent2));
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-        }
-        .badge {
-          font-size: 12px;
-          color: #cfd3ff;
-          border: 1px solid var(--border);
-          padding: 2px 10px;
-          border-radius: 999px;
-          background: rgba(124, 92, 255, 0.12);
-        }
-        .pill {
-          padding: 2px 8px;
-          border-radius: 999px;
-          font-size: 12px;
-          border: 1px solid var(--border);
-          background: rgba(39, 217, 128, 0.12);
-          color: #aef7d0;
-        }
-        label {
-          font-size: 13px;
-          color: #cfd3ff;
-          display: block;
-          margin-bottom: 4px;
-        }
-        input,
-        select {
-          width: 100%;
-          padding: 8px 10px;
-          border-radius: 10px;
-          border: 1px solid var(--border);
-          background: #0e1230;
-          color: var(--text);
-          font-size: 13px;
-          outline: none;
-        }
-        input:focus,
-        select:focus {
-          border-color: #6f84ff;
-          box-shadow: 0 0 0 3px rgba(127, 152, 255, 0.2);
-        }
-        .muted {
-          color: var(--muted);
-          font-size: 12px;
-        }
-        .formGrid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-          gap: 10px;
-        }
-        button {
-          border: none;
-          cursor: pointer;
-          font-size: 14px;
-        }
-        .btnPrimary {
-          background: linear-gradient(135deg, var(--accent), var(--accent2));
-          color: #fff;
-          padding: 10px 16px;
-          border-radius: 12px;
-          font-weight: 600;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-        }
-        .btnPrimary:hover {
-          opacity: 0.9;
-        }
-        .btnGhost {
-          background: transparent;
-          color: var(--muted);
-          border: 1px solid var(--border);
-          padding: 8px 12px;
-          border-radius: 999px;
-          font-size: 12px;
-        }
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 13px;
-        }
-        th,
-        td {
-          padding: 6px 8px;
-          text-align: left;
-        }
-        th {
-          color: #cfd3ff;
-          border-bottom: 1px solid var(--border);
-          font-weight: 500;
-        }
-        tr:nth-child(even) {
-          background: rgba(255, 255, 255, 0.02);
-        }
-        .textRight {
-          text-align: right;
-        }
-        .summaryRow {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin: 6px 0;
-          font-size: 14px;
-        }
-        .summaryLabel {
-          color: #cfd3ff;
-        }
-        .summaryValue {
-          font-weight: 600;
-        }
-        .sectionTitle {
-          font-size: 13px;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: var(--muted);
-          margin-top: 12px;
-        }
-        .toolbar {
-          display: flex;
-          gap: 12px;
-          align-items: center;
-          margin: 8px 0 18px 0;
-          flex-wrap: wrap;
-        }
-      `}</style>
+    <main className="min-h-screen bg-black text-white px-6 py-10">
+      <section className="max-w-6xl mx-auto mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2">
+          RunwayToRevenue – Bookkeeping
+        </h1>
+        <p className="text-zinc-300 max-w-3xl">
+          Every transaction goes here. Later, your Income Statement calculator
+          will pull totals for Sales, COGS, OPEX, and Owner&apos;s withdrawals.
+        </p>
+        {error && (
+          <p className="mt-3 text-sm text-red-400">
+            {error}
+          </p>
+        )}
+        {loading && (
+          <p className="mt-2 text-sm text-zinc-400">
+            Loading your bookkeeping…
+          </p>
+        )}
+      </section>
 
-      <h1>RunwayToRevenue – Bookkeeping</h1>
-      <p className="sub">
-        Every transaction goes here. Later, your Income Statement calculator will
-        pull totals for: Sales, COGS (materials, labor, packaging, inbound,
-        other), OPEX (marketing, website, rent, salaries, other), and Owner&apos;s
-        withdrawals.
-      </p>
+      <section className="max-w-6xl mx-auto grid gap-8 md:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)]">
+        {/* Left: form + table */}
+        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-5 space-y-6">
+          <h2 className="text-xl font-semibold mb-1">Add transaction</h2>
 
-      <div className="toolbar">
-        <span className="muted">
-          Currency is visual only – match it with your Income Statement currency
-          (EGP / USD / etc.).
-        </span>
-      </div>
-
-      <div className="grid">
-        {/* LEFT: add + list transactions */}
-        <div className="card">
-          <div className="cardHeader">
-            <h3 className="title">Bookkeeping Entries</h3>
-            <span className="badge">Detail</span>
-          </div>
-
-          {/* Add transaction form */}
-          <form className="formGrid" autoComplete="off" onSubmit={handleAdd}>
-            <div>
-              <label htmlFor="txDate">Date</label>
+          <form
+            onSubmit={handleAdd}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 items-end"
+          >
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-zinc-400">Date</label>
               <input
                 type="date"
-                id="txDate"
-                required
+                className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={e => setDate(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="txDesc">Description</label>
+
+            <div className="flex flex-col gap-1 sm:col-span-2">
+              <label className="text-sm text-zinc-400">Description</label>
               <input
                 type="text"
-                id="txDesc"
                 placeholder="Example: January drop sales"
-                required
+                className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={e => setDescription(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="txCategory">Category</label>
-              <select
-                id="txCategory"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="sales">Sales revenue</option>
 
-                <option value="c_mat">COGS – Materials / Fabric</option>
-                <option value="c_lab">COGS – Labor / Production</option>
-                <option value="c_pack">COGS – Packaging & Labels</option>
-                <option value="c_inb">COGS – Inbound Shipping</option>
-                <option value="c_other">COGS – Other Product Costs</option>
-
-                <option value="o_mkt">OPEX – Marketing / Ads</option>
-                <option value="o_web">OPEX – Website & Apps</option>
-                <option value="o_rent">OPEX – Rent / Utilities</option>
-                <option value="o_sal">OPEX – Salaries / Freelancers</option>
-                <option value="o_other">OPEX – Other Operating Expenses</option>
-
-                <option value="drawings">Owner&apos;s Withdrawals</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="txAmount">Amount</label>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-zinc-400">Amount</label>
               <input
                 type="number"
-                id="txAmount"
                 step="0.01"
-                placeholder="0.00"
-                required
+                className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={e => setAmount(e.target.value)}
               />
             </div>
-            <div>
-              <label>&nbsp;</label>
-              <button
-                type="submit"
-                className="btnPrimary"
-                style={{ width: "100%" }}
+
+            <div className="flex flex-col gap-1 sm:col-span-2">
+              <label className="text-sm text-zinc-400">Category</label>
+              <select
+                className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm"
+                value={category}
+                onChange={e => setCategory(e.target.value)}
               >
-                Add Transaction
-              </button>
+                {CATEGORIES.map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            <button
+              type="submit"
+              className="sm:col-span-2 lg:col-span-1 mt-2 inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-black hover:bg-emerald-400 transition"
+            >
+              Add Transaction
+            </button>
           </form>
 
-          <div
-            style={{
-              marginTop: 16,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <span className="muted">
-              These are the raw entries that will feed your Income Statement.
-            </span>
+          <div className="flex items-center justify-between mt-4">
+            <h3 className="text-sm font-medium text-zinc-300">
+              These are the raw entries that feed your Income Statement.
+            </h3>
             <button
               type="button"
-              className="btnGhost"
               onClick={handleClearAll}
+              className="text-xs text-red-400 hover:text-red-300"
             >
-              Clear all
+              Clear all (local)
             </button>
           </div>
 
-          {/* Transaction table */}
-          <div
-            style={{
-              marginTop: 14,
-              maxHeight: 340,
-              overflow: "auto",
-              borderRadius: 12,
-              border: "1px solid var(--border)",
-            }}
-          >
-            <table>
-              <thead>
+          <div className="border border-zinc-800 rounded-xl overflow-hidden mt-2">
+            <table className="w-full text-sm">
+              <thead className="bg-zinc-900 text-zinc-400">
                 <tr>
-                  <th style={{ width: "20%" }}>Date</th>
-                  <th style={{ width: "35%" }}>Description</th>
-                  <th style={{ width: "25%" }}>Category</th>
-                  <th style={{ width: "15%" }} className="textRight">
-                    Amount
-                  </th>
+                  <th className="px-3 py-2 text-left">Date</th>
+                  <th className="px-3 py-2 text-left">Description</th>
+                  <th className="px-3 py-2 text-left">Category</th>
+                  <th className="px-3 py-2 text-right">Amount</th>
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
+                {transactions.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="muted">
-                      Loading...
-                    </td>
-                  </tr>
-                ) : transactions.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="muted">
+                    <td
+                      className="px-3 py-3 text-zinc-500 text-sm"
+                      colSpan={4}
+                    >
                       No transactions yet. Add your first one above.
                     </td>
                   </tr>
                 ) : (
-                  transactions.map((t) => (
-                    <tr key={t.id}>
-                      <td>{t.date}</td>
-                      <td>{t.description}</td>
-                      <td>{categoryLabel(t.category)}</td>
-                      <td className="textRight">{money(t.amount)}</td>
+                  transactions.map(tx => (
+                    <tr
+                      key={tx.id}
+                      className="border-t border-zinc-800 hover:bg-zinc-900/60"
+                    >
+                      <td className="px-3 py-2 text-zinc-300">
+                        {tx.date}
+                      </td>
+                      <td className="px-3 py-2 text-zinc-200">
+                        {tx.description}
+                      </td>
+                      <td className="px-3 py-2 text-zinc-400 text-xs">
+                        {
+                          CATEGORIES.find(c => c.id === tx.category)
+                            ?.label ?? tx.category
+                        }
+                      </td>
+                      <td className="px-3 py-2 text-right">
+                        {formatMoney(tx.amount)}
+                      </td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
           </div>
-          {error && (
-            <p style={{ marginTop: 8 }} className="muted" aria-live="polite">
-              {error}
-            </p>
-          )}
         </div>
 
-        {/* RIGHT: summary that matches Income Statement */}
-        <div className="card">
-          <div className="cardHeader">
-            <h3 className="title">Summary for Income Statement</h3>
-            <span className="pill">Matches calculator</span>
+        {/* Right: summary */}
+        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Summary (matches Income Statement)</h2>
           </div>
 
-          <p className="muted">
-            Copy these totals into the matching fields in your Income Statement
-            calculator (or later, this will import automatically).
-          </p>
+          <div className="space-y-4 text-sm">
+            <div>
+              <h3 className="text-zinc-300 font-medium mb-1">SALES</h3>
+              <div className="flex items-center justify-between text-zinc-400">
+                <span>Sales Revenue (use in Sales Total)</span>
+                <span className="font-mono text-zinc-100">
+                  {formatMoney(totals["sales"])}
+                </span>
+              </div>
+            </div>
 
-          <div className="sectionTitle">Sales</div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Sales Revenue (use in Sales Total)
-            </span>
-            <span className="summaryValue">{money(totals.sales)}</span>
-          </div>
+            <div>
+              <h3 className="text-zinc-300 font-medium mb-1">
+                COGS (COST OF SALES)
+              </h3>
+              {[
+                "c_mat",
+                "c_lab",
+                "c_pack",
+                "c_inb",
+                "c_other",
+              ].map(id => {
+                const label =
+                  CATEGORIES.find(c => c.id === id)?.label ?? id;
+                return (
+                  <div
+                    key={id}
+                    className="flex items-center justify-between text-zinc-400"
+                  >
+                    <span>{label}</span>
+                    <span className="font-mono text-zinc-100">
+                      {formatMoney(totals[id])}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
 
-          <div className="sectionTitle">COGS (Cost of Sales)</div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Materials / Fabric (c_mat)
-            </span>
-            <span className="summaryValue">{money(totals.c_mat)}</span>
-          </div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Labor / Production (c_lab)
-            </span>
-            <span className="summaryValue">{money(totals.c_lab)}</span>
-          </div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Packaging & Labels (c_pack)
-            </span>
-            <span className="summaryValue">{money(totals.c_pack)}</span>
-          </div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Inbound Shipping (c_inb)
-            </span>
-            <span className="summaryValue">{money(totals.c_inb)}</span>
-          </div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Other Product Costs (c_other)
-            </span>
-            <span className="summaryValue">{money(totals.c_other)}</span>
-          </div>
+            <div>
+              <h3 className="text-zinc-300 font-medium mb-1">
+                OPERATING EXPENSES (OPEX)
+              </h3>
+              {["o_mkt", "o_web", "o_rent", "o_salary", "o_other"].map(
+                id => {
+                  const label =
+                    CATEGORIES.find(c => c.id === id)?.label ?? id;
+                  return (
+                    <div
+                      key={id}
+                      className="flex items-center justify-between text-zinc-400"
+                    >
+                      <span>{label}</span>
+                      <span className="font-mono text-zinc-100">
+                        {formatMoney(totals[id])}
+                      </span>
+                    </div>
+                  );
+                }
+              )}
+            </div>
 
-          <div className="sectionTitle">Operating Expenses (OPEX)</div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Marketing / Ads (o_mkt)
-            </span>
-            <span className="summaryValue">{money(totals.o_mkt)}</span>
+            <div>
+              <h3 className="text-zinc-300 font-medium mb-1">
+                OWNER
+              </h3>
+              <div className="flex items-center justify-between text-zinc-400">
+                <span>Owner&apos;s withdrawals / drawings</span>
+                <span className="font-mono text-zinc-100">
+                  {formatMoney(totals["owner"])}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Website & Apps (o_web)
-            </span>
-            <span className="summaryValue">{money(totals.o_web)}</span>
-          </div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Rent / Utilities (o_rent)
-            </span>
-            <span className="summaryValue">{money(totals.o_rent)}</span>
-          </div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Salaries / Freelancers (o_sal)
-            </span>
-            <span className="summaryValue">{money(totals.o_sal)}</span>
-          </div>
-          <div className="summaryRow">
-            <span className="summaryLabel">Other OPEX (o_other)</span>
-            <span className="summaryValue">{money(totals.o_other)}</span>
-          </div>
-
-          <div className="sectionTitle">Owner</div>
-          <div className="summaryRow">
-            <span className="summaryLabel">
-              Owner&apos;s Withdrawals (drawings)
-            </span>
-            <span className="summaryValue">{money(totals.drawings)}</span>
-          </div>
-
-          <p className="muted" style={{ marginTop: 14 }}>
-            For now you can manually copy these into the Income Statement
-            calculator:
-            <br />
-            Sales → "Sales Total", COGS → each COGS field, OPEX → each OPEX
-            field, Withdrawals → "Owner&apos;s Withdrawals".
-            <br />
-            Later we can connect this directly so the import is automatic.
-          </p>
         </div>
-      </div>
+      </section>
     </main>
   );
 }
