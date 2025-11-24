@@ -6,35 +6,25 @@ import { createClient } from "@supabase/supabase-js";
 type BookkeepingEntry = {
   id: string;
   email: string;
-  date: string;        // YYYY-MM-DD
+  date: string;          // YYYY-MM-DD
   description: string;
   category: string;
   amount: number;
   created_at: string;
 };
 
-// ---- Supabase helper ----
 function createSupabase() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !key) {
-    throw new Error("Missing Supabase env vars");
-  }
-
-  return createClient(url, key, {
-    auth: { persistSession: false },
-  });
+  const url = process.env.SUPABASE_URL!;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createClient(url, serviceKey);
 }
 
-
-  // ---- Get email from cookie ----
-// ---- Get email from cookie (with safe fallback) ----
+// ---- Get email from cookie, with safe fallback ----
 function getUserEmailFromCookie(): string {
   const cookieStore = cookies() as any;
   const userCookie = cookieStore.get?.("runway_user");
 
-  // If no cookie → use a shared guest account so it NEVER breaks
+  // No cookie → use shared guest account so nothing breaks
   if (!userCookie) {
     return "guest@runway.local";
   }
@@ -43,22 +33,14 @@ function getUserEmailFromCookie(): string {
     const parsed = JSON.parse(userCookie.value) as { email?: string };
     return parsed.email || "guest@runway.local";
   } catch {
-    // If cookie is weird / broken → still don’t crash
     return "guest@runway.local";
   }
 }
-
-
-
-
 
 // ---- GET: load all entries for this user ----
 export async function GET(_req: NextRequest) {
   try {
     const email = getUserEmailFromCookie();
-    
-    
-
     const supabase = createSupabase();
 
     const { data, error } = await supabase
@@ -68,29 +50,30 @@ export async function GET(_req: NextRequest) {
       .order("date", { ascending: true });
 
     if (error) {
-      console.error("Supabase GET error:", error);
+      console.error("Supabase GET bookkeeping error:", error);
       return NextResponse.json(
-        { error: "Failed to load bookkeeping data." },
-        { status: 500 }
+        { entries: [] as BookkeepingEntry[], error: error.message },
+        { status: 200 }
       );
     }
 
-    return NextResponse.json({ entries: data ?? [] }, { status: 200 });
+    return NextResponse.json(
+      { entries: (data as BookkeepingEntry[]) ?? [] },
+      { status: 200 }
+    );
   } catch (err) {
     console.error("GET /api/bookkeeping error:", err);
     return NextResponse.json(
-      { error: "Unexpected server error." },
-      { status: 500 }
+      { entries: [] as BookkeepingEntry[], error: "Unexpected server error." },
+      { status: 200 }
     );
   }
 }
 
-// ---- POST: save new entry for this user ----
+// ---- POST: add one entry for this user ----
 export async function POST(req: NextRequest) {
   try {
     const email = getUserEmailFromCookie();
-    
-
     const body = await req.json();
     const { date, description, category, amount } = body;
 
@@ -98,30 +81,35 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await supabase
       .from("bookkeeping_entries")
-      .insert({
-        email,
-        date,
-        description,
-        category,
-        amount,
-      })
+      .insert([
+        {
+          email,
+          date,
+          description,
+          category,
+          amount,
+        },
+      ])
       .select()
       .single();
 
     if (error) {
-      console.error("Supabase POST error:", error);
+      console.error("Supabase POST bookkeeping error:", error);
       return NextResponse.json(
-        { error: "Failed to save entry." },
-        { status: 500 }
+        { entry: null, error: error.message },
+        { status: 200 }
       );
     }
 
-    return NextResponse.json({ entry: data }, { status: 201 });
+    return NextResponse.json(
+      { entry: data as BookkeepingEntry, error: null },
+      { status: 201 }
+    );
   } catch (err) {
     console.error("POST /api/bookkeeping error:", err);
     return NextResponse.json(
-      { error: "Unexpected server error." },
-      { status: 500 }
+      { entry: null, error: "Unexpected server error." },
+      { status: 200 }
     );
   }
 }
