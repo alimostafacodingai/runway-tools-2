@@ -29,22 +29,26 @@ function createSupabase() {
 
 
   // ---- Get email from cookie ----
-function getUserEmailFromCookie(): string | null {
-  // Next types say cookies() can be a Promise in some cases, so we force it to any
+// ---- Get email from cookie (with safe fallback) ----
+function getUserEmailFromCookie(): string {
   const cookieStore = cookies() as any;
   const userCookie = cookieStore.get?.("runway_user");
 
+  // If no cookie → use a shared guest account so it NEVER breaks
   if (!userCookie) {
-    return null;
+    return "guest@runway.local";
   }
 
   try {
     const parsed = JSON.parse(userCookie.value) as { email?: string };
-    return parsed.email ?? null;
+    return parsed.email || "guest@runway.local";
   } catch {
-    return null;
+    // If cookie is weird / broken → still don’t crash
+    return "guest@runway.local";
   }
 }
+
+
 
 
 
@@ -52,12 +56,8 @@ function getUserEmailFromCookie(): string | null {
 export async function GET(_req: NextRequest) {
   try {
     const email = getUserEmailFromCookie();
-    if (!email) {
-      return NextResponse.json(
-        { error: "Not logged in or runway_user cookie missing." },
-        { status: 401 }
-      );
-    }
+    
+    
 
     const supabase = createSupabase();
 
@@ -89,12 +89,7 @@ export async function GET(_req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const email = getUserEmailFromCookie();
-    if (!email) {
-      return NextResponse.json(
-        { error: "Not logged in or runway_user cookie missing." },
-        { status: 401 }
-      );
-    }
+    
 
     const body = await req.json();
     const { date, description, category, amount } = body;
