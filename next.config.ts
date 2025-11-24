@@ -4,12 +4,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        // old broken business plan URL → correct file
+        // OLD broken business plan URL → correct file
         source: "/pdfs/Fashion_Business_Plan_Template,%20(2).pdf",
         destination: "/pdfs/business-plan-template.pdf",
         permanent: true,
       },
-      // no brand-identity redirect here anymore
+      // 👇 IMPORTANT: no redirect here for brand-identity-template.pdf
     ];
   },
 };
