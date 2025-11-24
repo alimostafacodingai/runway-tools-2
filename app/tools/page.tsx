@@ -46,7 +46,7 @@ export default function ToolsPage() {
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {/* Business Plan Template */}
             <a
-              href="/pdfs/Fashion_Business_Plan_Template, (2).pdf" // make sure this matches the actual file name
+              href="/pdfs/business-plan-template.pdf" // make sure this matches the actual file name
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
               target="_blank"
               rel="noreferrer"
@@ -61,7 +61,7 @@ export default function ToolsPage() {
 
             {/* Brand Identity Starter */}
             <a
-              href="/pdfs/Brand-identity-template.pdf"
+              href="/pdfs/brand-identity-template.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
               target="_blank"
               rel="noreferrer"
