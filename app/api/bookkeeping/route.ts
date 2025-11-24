@@ -1,90 +1,98 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
-import jwt from "jsonwebtoken";
+import { createClient } from "@supabase/supabase-js";
 
-type BookEntry = {
-  id: string;
-  date: string; // e.g. "2025-11-18"
-  type: "income" | "expense";
-  amount: number;
+// --- Supabase admin client (server-side only) ---
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+type BookkeepingInsert = {
+  email: string;
+  date: string;         // e.g. "2026-07-20"
+  description: string;
   category: string;
-  note?: string;
+  amount: number;
 };
 
-type BookkeepingDB = Record<string, BookEntry[]>; // email → entries[]
-
-const dataFile = path.join(
-  process.cwd(),
-  "app",
-  "api",
-  "bookkeeping",
-  "data",
-  "bookkeeping.json"
-);
-
-async function readDb(): Promise<BookkeepingDB> {
-  try {
-    const file = await fs.readFile(dataFile, "utf8");
-    return file ? JSON.parse(file) : {};
-  } catch {
-    // if file doesn't exist yet, start with empty object
-    return {};
-  }
-}
-
-async function writeDb(db: BookkeepingDB) {
-  await fs.writeFile(dataFile, JSON.stringify(db, null, 2), "utf8");
-}
-
-function getEmailFromRequest(req: NextRequest): string | null {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return null;
-
-  try {
-    const payload = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "secret123"
-    ) as { email: string; plan?: string };
-
-    return payload.email;
-  } catch {
-    return null;
-  }
-}
-
-// 🔹 GET → return all entries for this logged-in user
+// GET /api/bookkeeping?email=someone@gmail.com
 export async function GET(req: NextRequest) {
-  const email = getEmailFromRequest(req);
+  const { searchParams } = new URL(req.url);
+  const email = searchParams.get("email");
+
   if (!email) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    return NextResponse.json(
+      { error: "Missing email query parameter" },
+      { status: 400 }
+    );
   }
 
-  const db = await readDb();
-  const entries = db[email] || [];
-  return NextResponse.json(entries);
+  const { data, error } = await supabase
+    .from("bookkeeping_entries")
+    .select("*")
+    .eq("email", email)
+    .order("date", { ascending: true });
+
+  if (error) {
+    console.error("Supabase GET error:", error);
+    return NextResponse.json(
+      { error: "Failed to load entries" },
+      { status: 500 }
+    );
+  }
+
+  // Your frontend can read `entries` and put them into state
+  return NextResponse.json({ entries: data ?? [] }, { status: 200 });
 }
 
-// 🔹 POST → add ONE new entry for this user
+// POST /api/bookkeeping
+// body: { email, date, description, category, amount }
 export async function POST(req: NextRequest) {
-  const email = getEmailFromRequest(req);
-  if (!email) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  let body: Partial<BookkeepingInsert>;
+
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid JSON body" },
+      { status: 400 }
+    );
   }
 
-  const body = await req.json();
-  const entry = body.entry as BookEntry | undefined;
+  const { email, date, description, category } = body;
+  const amount = body.amount !== undefined ? Number(body.amount) : NaN;
 
-  if (!entry) {
-    return NextResponse.json({ error: "Missing entry" }, { status: 400 });
+  if (!email || !date || !description || !category || Number.isNaN(amount)) {
+    return NextResponse.json(
+      { error: "Missing or invalid fields" },
+      { status: 400 }
+    );
   }
 
-  const db = await readDb();
-  const userEntries = db[email] || [];
+  const { data, error } = await supabase
+    .from("bookkeeping_entries")
+    .insert({
+      email,
+      date,
+      description,
+      category,
+      amount,
+    })
+    .select()
+    .single();
 
-  db[email] = [...userEntries, entry];
+  if (error) {
+    console.error("Supabase POST error:", error);
+    return NextResponse.json(
+      { error: "Failed to save entry" },
+      { status: 500 }
+    );
+  }
 
-  await writeDb(db);
-
-  return NextResponse.json({ success: true });
+  // Return 201 so your frontend sees res.ok === true
+  return NextResponse.json({ entry: data }, { status: 201 });
 }
