@@ -54,12 +54,13 @@ export default function RunwayDashboardPage() {
 
         const data = await res.json();
 
-        // Support both shapes: [] OR { items: [] } OR { transactions: [] }
-        const items: Transaction[] = Array.isArray(data)
-          ? data
-          : data.items || data.transactions || [];
+// Support [] OR { entries: [] } OR { items: [] } OR { transactions: [] }
+const items: Transaction[] = Array.isArray(data)
+  ? data
+  : data.entries || data.items || data.transactions || [];
 
-        setTransactions(items || []);
+setTransactions(items || []);
+
       } catch (err: any) {
         console.error(err);
         setError(err.message || "Something went wrong");
