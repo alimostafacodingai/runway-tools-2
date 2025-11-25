@@ -30,7 +30,7 @@ const CATEGORIES: { id: string; label: string }[] = [
   { id: "o_other", label: "Other OPEX (o_other)" },
 
   // Owner
-  { id: "owner", label: "Owner's withdrawals / drawings" },
+  { id: "drawings", label: "drawings" },
 ];
 
 function recomputeTotals(list: BookEntry[]): Totals {
