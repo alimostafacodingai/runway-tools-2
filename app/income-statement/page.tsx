@@ -3,10 +3,11 @@
 import { useEffect, useRef } from "react";
 import jsPDF from "jspdf";
 
+// Single, correct BookEntry type
 type BookEntry = {
-  id: string;
-  date: string;
-  description: string;
+  id?: string;
+  date?: string;
+  description?: string;
   category: string;
   amount: number;
 };
@@ -157,12 +158,20 @@ export default function IncomeStatementPage() {
         alert("You need to log in before importing from bookkeeping.");
         return;
       }
+
       if (!res.ok) {
         alert("Could not load bookkeeping data.");
         return;
       }
 
-      const entries: BookEntry[] = await res.json();
+      const json = await res.json();
+
+      // Support both [{...}] and { entries: [{...}] }
+      const entries: BookEntry[] = Array.isArray(json)
+        ? json
+        : Array.isArray(json.entries)
+        ? json.entries
+        : [];
 
       const totals: Record<string, number> = {
         sales: 0,
@@ -277,34 +286,50 @@ export default function IncomeStatementPage() {
     doc.text("Cost of Goods Sold (COGS)", 20, y);
     y += 8;
     doc.setFontSize(12);
-    doc.text(`Materials / Fabric: ${fmt(cMat)}`, 30, y); y += 6;
-    doc.text(`Labor / Production: ${fmt(cLab)}`, 30, y); y += 6;
-    doc.text(`Packaging & Labels: ${fmt(cPack)}`, 30, y); y += 6;
-    doc.text(`Inbound Shipping: ${fmt(cInb)}`, 30, y); y += 6;
-    doc.text(`Other Product Costs: ${fmt(cOther)}`, 30, y); y += 8;
-    doc.text(`Total COGS: ${fmt(cogs)}`, 30, y); y += 8;
-    doc.text(`Gross Profit: ${fmt(gross)}`, 30, y); y += 12;
+    doc.text(`Materials / Fabric: ${fmt(cMat)}`, 30, y);
+    y += 6;
+    doc.text(`Labor / Production: ${fmt(cLab)}`, 30, y);
+    y += 6;
+    doc.text(`Packaging & Labels: ${fmt(cPack)}`, 30, y);
+    y += 6;
+    doc.text(`Inbound Shipping: ${fmt(cInb)}`, 30, y);
+    y += 6;
+    doc.text(`Other Product Costs: ${fmt(cOther)}`, 30, y);
+    y += 8;
+    doc.text(`Total COGS: ${fmt(cogs)}`, 30, y);
+    y += 8;
+    doc.text(`Gross Profit: ${fmt(gross)}`, 30, y);
+    y += 12;
 
     // OPEX
     doc.setFontSize(14);
     doc.text("Operating Expenses (OPEX)", 20, y);
     y += 8;
     doc.setFontSize(12);
-    doc.text(`Marketing / Ads: ${fmt(oMkt)}`, 30, y); y += 6;
-    doc.text(`Website & Apps: ${fmt(oWeb)}`, 30, y); y += 6;
-    doc.text(`Rent / Utilities: ${fmt(oRent)}`, 30, y); y += 6;
-    doc.text(`Salaries / Freelancers: ${fmt(oSal)}`, 30, y); y += 6;
-    doc.text(`Other OPEX: ${fmt(oOther)}`, 30, y); y += 8;
-    doc.text(`Total OPEX: ${fmt(opex)}`, 30, y); y += 8;
-    doc.text(`Net Profit: ${fmt(net)}`, 30, y); y += 12;
+    doc.text(`Marketing / Ads: ${fmt(oMkt)}`, 30, y);
+    y += 6;
+    doc.text(`Website & Apps: ${fmt(oWeb)}`, 30, y);
+    y += 6;
+    doc.text(`Rent / Utilities: ${fmt(oRent)}`, 30, y);
+    y += 6;
+    doc.text(`Salaries / Freelancers: ${fmt(oSal)}`, 30, y);
+    y += 6;
+    doc.text(`Other OPEX: ${fmt(oOther)}`, 30, y);
+    y += 8;
+    doc.text(`Total OPEX: ${fmt(opex)}`, 30, y);
+    y += 8;
+    doc.text(`Net Profit: ${fmt(net)}`, 30, y);
+    y += 12;
 
     // Owner / Retained
     doc.setFontSize(14);
     doc.text("Owner & Retained Profit", 20, y);
     y += 8;
     doc.setFontSize(12);
-    doc.text(`Owner's Withdrawals: ${fmt(drawings)}`, 30, y); y += 8;
-    doc.text(`Retained Profit: ${fmt(retained)}`, 30, y); y += 10;
+    doc.text(`Owner's Withdrawals: ${fmt(drawings)}`, 30, y);
+    y += 8;
+    doc.text(`Retained Profit: ${fmt(retained)}`, 30, y);
+    y += 10;
 
     doc.save("income-statement.pdf");
   }
@@ -325,7 +350,8 @@ export default function IncomeStatementPage() {
             <option value="SAR">SAR – Saudi Riyal</option>
           </select>
           <span className="muted">
-            Values show with currency <strong>symbols</strong>; inputs stay numeric.
+            Values show with currency <strong>symbols</strong>; inputs stay
+            numeric.
           </span>
 
           {/* NEW BUTTONS */}
@@ -452,12 +478,7 @@ export default function IncomeStatementPage() {
             </div>
             <div className="row">
               <label>Rent / Utilities</label>
-              <input
-                id="o_rent"
-                type="number"
-                step="0.01"
-                defaultValue={0}
-              />
+              <input id="o_rent" type="number" step="0.01" defaultValue={0} />
             </div>
             <div className="row">
               <label>Salaries / Freelancers</label>
@@ -585,7 +606,11 @@ export default function IncomeStatementPage() {
             Roboto, Helvetica, Arial;
           background:
             radial-gradient(1200px 800px at 0% 0%, #251b63 0%, transparent 60%),
-            radial-gradient(1200px 800px at 100% 0%, #0b6c9a33 0%, transparent 60%),
+            radial-gradient(
+              1200px 800px at 100% 0%,
+              #0b6c9a33 0%,
+              transparent 60%
+            ),
             var(--bg);
           color: var(--text);
           line-height: 1.45;
