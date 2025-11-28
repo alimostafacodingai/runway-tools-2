@@ -1,102 +1,116 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Plan = "free" | "beginner" | "pro";
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams?: { next?: string };
+}
+
+export default function LoginPage({ searchParams }: LoginPageProps) {
   const router = useRouter();
-  const search = useSearchParams();
 
-  // Only trust "next" if it is an internal path
-  const rawNext = search.get("next");
-  const safeNext =
-    rawNext && rawNext.startsWith("/") ? rawNext : null;
-
-  const [email, setEmail] = useState(search.get("email") || "");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  // Read ?next=... from the URL safely
+  const rawNext = searchParams?.next;
+  const safeNext =
+    rawNext && typeof rawNext === "string" && rawNext.startsWith("/")
+      ? rawNext
+      : null;
+
   async function handleLogin(e: React.FormEvent) {
-  e.preventDefault();
-  setError("");
+    e.preventDefault();
+    setError("");
 
-  try {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      setError(data.error || "Login failed");
-      return;
+      if (!res.ok) {
+        setError(data.error || "Login failed.");
+        return;
+      }
+
+      const plan: Plan = (data.user?.plan as Plan) || "free";
+
+      // If we came from checkout with ?next=...
+      if (safeNext) {
+        router.push(safeNext);
+        return;
+      }
+
+      // Redirect based on plan in Supabase
+      if (plan === "beginner") {
+        router.push("/beginner");
+      } else if (plan === "pro") {
+        router.push("/pro");
+      } else {
+        router.push("/free");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Unexpected error. Please try again.");
     }
-
-    const plan = data.user?.plan || "free";
-
-    // If you support ?next=... for checkout, keep this first
-    if (safeNext) {
-      router.push(safeNext);
-      return;
-    }
-
-    // ✅ Correct redirect based on plan from Supabase
-    if (plan === "beginner") {
-      router.push("/beginner");
-    } else if (plan === "pro") {
-      router.push("/pro");
-    } else {
-      router.push("/free");
-    }
-  } catch (err) {
-    console.error("Login error:", err);
-    setError("Unexpected error during login.");
   }
-}
-
 
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
-        <h1 className="text-3xl font-bold mb-6 text-center">
+      <div className="w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-8 shadow-xl">
+        <h1 className="text-3xl font-bold mb-2 text-center">
           Log in to Runway Tools
         </h1>
+        <p className="text-zinc-400 text-center mb-8">
+          Enter your email and password to access your tools.
+        </p>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            className="w-full px-4 py-3 rounded-lg bg-zinc-950 border border-zinc-700 focus:outline-none focus:border-white"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full px-4 py-3 rounded-lg bg-zinc-950 border border-zinc-700 focus:outline-none focus:border-white"
-          />
+        <form className="space-y-4" onSubmit={handleLogin}>
+          <div>
+            <label className="block text-sm mb-1">Email</label>
+            <input
+              type="email"
+              className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm outline-none focus:border-zinc-400"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Password</label>
+            <input
+              type="password"
+              className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm outline-none focus:border-zinc-400"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
           {error && (
-            <p className="text-red-400 text-sm">{error}</p>
+            <p className="text-sm text-red-400 mt-1 text-center">{error}</p>
           )}
 
           <button
             type="submit"
-            className="w-full py-3 rounded-lg bg-white text-black font-semibold hover:bg-zinc-200 transition"
+            className="w-full mt-2 bg-white text-black font-semibold py-2 rounded-lg hover:bg-zinc-200 transition"
           >
             Log in
           </button>
         </form>
 
-        <p className="mt-4 text-sm text-center text-zinc-400">
+        <p className="text-sm text-zinc-500 text-center mt-4">
           Don&apos;t have an account?{" "}
-          <a href="/signup" className="underline">
+          <a href="/signup" className="text-zinc-200 underline">
             Sign up
           </a>
         </p>
