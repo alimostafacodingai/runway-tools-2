@@ -1,45 +1,89 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { supabaseServer } from "@/lib/supabaseServer";
+import { createHash } from "crypto";
 
-const SECRET = process.env.JWT_SECRET || "dev-secret-key"; // you can change later
-
-type Plan = "free" | "beginner" | "pro";
+function hashPassword(password: string) {
+  return createHash("sha256").update(password).digest("hex");
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const email: string | undefined = body.email;
-    const password: string | undefined = body.password;
-    const plan: Plan = body.plan || "free";
+    const { email, password, plan } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: "Email and password are required." },
+        { error: "Email and password are required" },
         { status: 400 }
       );
     }
 
-    // TODO: save user to a real database; for now we just issue a token
-    const token = jwt.sign(
-      { email, plan },
-      SECRET,
-      { expiresIn: "30d" }
+    // 1) Check if user exists already
+    const { data: existing, error: checkError } = await supabaseServer
+      .from("users")
+      .select("id")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (checkError) {
+      console.error("DB check error:", checkError);
+      return NextResponse.json(
+        { error: "Database error" },
+        { status: 500 }
+      );
+    }
+
+    if (existing) {
+      return NextResponse.json(
+        { error: "User already exists" },
+        { status: 400 }
+      );
+    }
+
+    // 2) Hash password exactly like login
+    const password_hash = hashPassword(password);
+
+    // 3) Insert new user
+    const { data: user, error: insertError } = await supabaseServer
+      .from("users")
+      .insert({
+        email,
+        password_hash,
+        plan: plan || "free",
+      })
+      .select("id, email, plan")
+      .single();
+
+    if (insertError || !user) {
+      console.error("Insert error:", insertError);
+      return NextResponse.json(
+        { error: "Could not create user" },
+        { status: 500 }
+      );
+    }
+
+    // 4) Set cookies for session (same as login)
+    const res = NextResponse.json(
+      { message: "User created", user },
+      { status: 201 }
     );
 
-    const res = NextResponse.json({ ok: true });
-
-    res.cookies.set("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
+    res.cookies.set("user_email", user.email, {
       path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+    });
+
+    res.cookies.set("user_plan", user.plan, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
     });
 
     return res;
   } catch (err) {
-    console.error("Signup error:", err);
+    console.error("Unexpected signup error:", err);
     return NextResponse.json(
-      { error: "Server error" },
+      { error: "Unexpected error" },
       { status: 500 }
     );
   }
