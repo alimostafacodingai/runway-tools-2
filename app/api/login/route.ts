@@ -1,11 +1,9 @@
-// app/api/login/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import crypto from "crypto";
+import { createHash } from "crypto";
 
-// same hashing as signup
 function hashPassword(password: string) {
-  return crypto.createHash("sha256").update(password).digest("hex");
+  return createHash("sha256").update(password).digest("hex");
 }
 
 export async function POST(req: NextRequest) {
@@ -21,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     const password_hash = hashPassword(password);
 
-    // 1) Look for a user with matching email + hash in Supabase
+    // Look up user by email + hashed password in Supabase
     const { data: user, error } = await supabaseServer
       .from("users")
       .select("id, email, plan")
@@ -44,7 +42,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2) Set cookies (same names your app already uses)
     const res = NextResponse.json(
       {
         message: "Logged in",
@@ -53,6 +50,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
+    // Same cookie names you were using before
     res.cookies.set("user_email", user.email, {
       path: "/",
       httpOnly: true,
