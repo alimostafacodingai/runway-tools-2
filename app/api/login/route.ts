@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { createHash } from "crypto";
 
+// Force Node runtime (so crypto + supabase work)
+export const runtime = "nodejs";
+
 function hashPassword(password: string) {
   return createHash("sha256").update(password).digest("hex");
 }
@@ -19,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     const password_hash = hashPassword(password);
 
-    // Look up user by email + hashed password in Supabase
+    // Look up user in Supabase
     const { data: user, error } = await supabaseServer
       .from("users")
       .select("id, email, plan")
@@ -29,10 +32,7 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error("DB error:", error);
-      return NextResponse.json(
-        { error: "Database error" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Database error" }, { status: 500 });
     }
 
     if (!user) {
@@ -43,21 +43,18 @@ export async function POST(req: NextRequest) {
     }
 
     const res = NextResponse.json(
-      {
-        message: "Logged in",
-        user: { id: user.id, email: user.email, plan: user.plan },
-      },
+      { message: "Logged in", user },
       { status: 200 }
     );
 
-    // Same cookie names you were using before
+    // Cookies for frontend
     res.cookies.set("user_email", user.email, {
       path: "/",
       httpOnly: true,
       sameSite: "lax",
     });
 
-    res.cookies.set("user_plan", user.plan, {
+    res.cookies.set("user_plan", user.plan ?? "free", {
       path: "/",
       httpOnly: true,
       sameSite: "lax",
@@ -65,10 +62,7 @@ export async function POST(req: NextRequest) {
 
     return res;
   } catch (err) {
-    console.error("Unexpected error:", err);
-    return NextResponse.json(
-      { error: "Unexpected error" },
-      { status: 500 }
-    );
+    console.error("Unexpected error in /api/login:", err);
+    return NextResponse.json({ error: "Unexpected error" }, { status: 500 });
   }
 }
