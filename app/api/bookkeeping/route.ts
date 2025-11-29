@@ -32,7 +32,7 @@ export async function GET(_req: NextRequest) {
     }
 
     const { data, error } = await supabaseServer
-      .from<BookkeepingEntry>("bookkeeping_entries")
+      .from("bookkeeping_entries")
       .select("*")
       .eq("email", email) // if your column is user_email, change this
       .order("date", { ascending: true });
