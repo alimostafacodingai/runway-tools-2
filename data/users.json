@@ -40,5 +40,17 @@
     "passwordHash": "f4cc7b025eb91aa7901b90185711f9b4929aefbea8ac652083a7a1367f165362c06d03527dc8e0eeeb4c5a53ad2559b4f20af60adc9d1482e574bee4613507f0",
     "salt": "9db768dd67a5ff7fe3634ceb8d8ac40d",
     "plan": "free"
+  },
+  {
+    "email": "jorgeheaton@gmail.com",
+    "passwordHash": "014ea53fa9a99c58e9344ce38ec24aba2de011f224a95d74fc64607a5e957121ef9c41d87dd86bc5b5731b8765839ec5593625f6958f112d0255c8ce0804cae6",
+    "salt": "26964fe05f84844bc8a466c2fc92bcd1",
+    "plan": "beginner"
+  },
+  {
+    "email": "imangadzhi@gmail.com",
+    "passwordHash": "ded46d3a267837d349d4f474e16df8a1be329797ad75fdbf872794253ff7f8959fc5ea458f57da15be01d66f7442a0169114a92dfa9b1e078e55e941555c2eaf",
+    "salt": "056a656f903a4121dc989eff964b2d2e",
+    "plan": "beginner"
   }
 ]

@@ -23,12 +23,7 @@
     "salt": "eek115vy664",
     "plan": "free"
   },
-  {
-    "email": "alimostafahamedmostafa17@gmail.com",
-    "passwordHash": "pgyb04ur8e9:TG9sb28zODgz",
-    "salt": "pgyb04ur8e9",
-    "plan": "beginner"
-  },
+  
   {
     "email": "alokaallcaps@gmail.com",
     "passwordHash": "dqvw0sk6oze:MTIzNA==",
@@ -40,11 +35,6 @@
     "passwordHash": "bqo9pfwh5m:MTIzNA==",
     "salt": "bqo9pfwh5m",
     "plan": "pro"
-  },
-  {
-    "email": "wowhownow@gmail.com",
-    "passwordHash": "pcfpv3ixo9g:MTIzNA==",
-    "salt": "pcfpv3ixo9g",
-    "plan": "pro"
   }
+  
 ]
