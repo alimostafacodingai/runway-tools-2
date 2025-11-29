@@ -53,7 +53,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
       if (plan === "beginner") {
         router.push("/beginner");
       } else if (plan === "pro") {
-        router.push("/pro");
+        router.push("/professional-plan");
       } else {
         router.push("/free");
       }
