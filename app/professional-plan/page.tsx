@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function ProPage() {
@@ -27,24 +28,26 @@ export default function ProPage() {
             influencer deals and more.
           </p>
 
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="https://chatgpt.com/g/g-68aba6ec7478819193a4a0004bcc5f6a-fashion-mentor-pro-by-runway-tools"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-zinc-200 transition"
-            >
-              Open Pro AI Mentor
-            </a>
+          
 
-            <button
-              onClick={() => router.push("/tools")}
-              className="inline-flex items-center px-4 py-2 rounded-lg border border-zinc-600 text-sm font-semibold text-zinc-100 hover:bg-zinc-900 transition"
-            >
-              All templates
-            </button>
-          </div>
-        </div>
+
+
+<div className="flex items-center gap-3 flex-wrap">
+  <Link
+    href="/pro/mentor"
+    className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-zinc-200"
+  >
+    Open Pro AI Mentor
+  </Link>
+
+  <button
+    onClick={() => router.push("/tools")}
+    className="inline-flex items-center px-4 py-2 rounded-lg border border-zinc-600 text-sm font-semibold hover:bg-zinc-900"
+  >
+    All templates
+  </button>
+</div>
+</div>.
 
         {/* Pro calculators */}
         <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6">
