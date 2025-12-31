@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# env files (do NOT commit secrets)
+.env
+.env.*
+!.env.example
