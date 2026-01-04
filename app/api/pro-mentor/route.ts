@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { runMentor } from "@/lib/mentor/engine";
+import { runMentor } from "@/lib/mentor/runtime";
 
 
 export const runtime = "nodejs";
@@ -14,10 +14,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing message" }, { status: 400 });
     }
 
-    const answer = runMentor({
-      message,
-      history,
-    });
+    const answer = await runMentor({ message, history });
 
     return NextResponse.json({ answer });
   } catch (e: any) {
