@@ -19,20 +19,20 @@ export default function ToolsPage() {
       <section className="max-w-5xl mx-auto space-y-10">
         {/* Fashion Mentor AI Lite */}
         <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-2xl font-semibold mb-2">Fashion Mentor AI Lite</h2>
+          <h2 className="text-2xl font-semibold mb-2">AI Fashion Mentor - Basic Access</h2>
           <p className="text-zinc-400 mb-4">
             Ask how each Runway Tools calculator works, what it does, and which tool to use for what.
             For &quot;is this good or bad?&quot; decisions and full strategy, upgrade to Fashion Mentor AI Pro.
           </p>
 
-          <a
-            href="https://chatgpt.com/g/g-68b2591e88248191ace922d144f65135-fashion-mentor-lite-by-runway-tools"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-zinc-200 transition"
-          >
-            Open Fashion Mentor AI Lite
-          </a>
+          <button
+  type="button"
+  onClick={() => router.push("/pro/mentor")}
+  className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:opacity-90"
+>
+  Open AI Fashion Mentor
+</button>
+
         </div>
 
         {/* Free PDFs / Templates */}

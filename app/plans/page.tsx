@@ -61,9 +61,13 @@ export default function Plans() {
             <li>Refund & exchange-policy template</li>
             <li>Email-marketing template</li>
             <li>Label & invoice template (Arabic / English)</li>
-            <li>✅ AI Fashion Mentor Lite</li>
+            <li>✅ AI Fashion Mentor-Basic access </li>
             <li>
-              Chat with the AI for <strong>quick answers</strong>
+            Ask questions about templates & PDFs</li>
+
+<li>Get guidance on starting your brand</li>
+
+<li>Quick answers for early decisions
             </li>
           </ul>
 
@@ -99,6 +103,11 @@ export default function Plans() {
             <li>Returns / Exchange Cost Model</li>
             <li>Packaging Cost Builder</li>
             <li>✅ Production Planner + MOQ Optimizer</li>
+            <li>AI Fashion Mentor — Operations Access</li>
+            <li>Analyze calculator results</li>
+            <li>Analyze templates & PDFs</li>
+            <li>Price products correctly</li>
+            <li>Understand costs, margins, and break-even</li>
           </ul>
 
           <button
@@ -124,10 +133,12 @@ export default function Plans() {
             Includes everything in Free + Beginner, plus:
           </h4>
           <ul className="list-disc list-inside space-y-2 text-sm text-white/80 mb-6">
-            <li>✅ Full AI Fashion Mentor (Advanced)</li>
-            <li>Unlimited chat</li>
+            <li>✅ Manufacturing cost tool</li>
             <li>✅ Runway dashboard</li>
-            <li>✅ Manufacturing Cost Tool</li>
+            <li>✅ AI Fashion Mentor — Advanced Access</li>
+            <li>Connect numbers together (pricing, cash flow, performance)</li>
+            <li>Understand dashboards and performance trends</li>
+            <li>Make manufacturing decisions</li>
            
           </ul>
 

@@ -32,7 +32,7 @@ export default function BeginnerPage() {
       <section className="max-w-4xl mx-auto space-y-10">
         {/* AI section */}
         <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-2xl font-semibold mb-2">AI Fashion Mentor Lite</h2>
+          <h2 className="text-2xl font-semibold mb-2">AI Fashion Mentor - Operations Access</h2>
           <p className="text-zinc-400 mb-4">
             Use the AI to ask questions about pricing, launching, content ideas,
             and basic brand strategy.
@@ -43,7 +43,7 @@ export default function BeginnerPage() {
   onClick={() => router.push("/pro/mentor")}
   className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-zinc-200 transition"
 >
-  Open AI Mentor Lite
+  Open AI Fashion Mentor 
 </button>
 
 

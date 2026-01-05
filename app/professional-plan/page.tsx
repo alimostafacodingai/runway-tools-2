@@ -22,7 +22,7 @@ export default function ProPage() {
       <section className="max-w-5xl mx-auto space-y-10">
         {/* Pro AI */}
         <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-2xl font-semibold mb-2">AI Fashion Mentor – Pro</h2>
+          <h2 className="text-2xl font-semibold mb-2">AI Fashion Mentor – Advanced Access</h2>
           <p className="text-zinc-400 mb-4">
             Ask deeper questions about scaling, cashflow, product strategy, drops,
             influencer deals and more.
@@ -37,7 +37,7 @@ export default function ProPage() {
     href="/pro/mentor"
     className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-zinc-200"
   >
-    Open Pro AI Mentor
+    Open AI Fashion Mentor
   </Link>
 
   <button

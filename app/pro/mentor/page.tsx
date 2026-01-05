@@ -107,7 +107,7 @@ export default function ProMentorPage() {
           <div className="text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
               <span className="h-2 w-2 rounded-full bg-emerald-400/80" />
-              Pro AI Mentor
+              AI Fashion Mentor
             </div>
 
             <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
@@ -182,7 +182,7 @@ export default function ProMentorPage() {
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-emerald-400/80" />
-            <div className="text-sm font-semibold">Pro AI Mentor</div>
+            <div className="text-sm font-semibold">AI Fashion Mentor</div>
           </div>
 
           <button
@@ -230,7 +230,7 @@ export default function ProMentorPage() {
                 }
               }}
               rows={2}
-              placeholder="Message Pro Mentor…"
+              placeholder="Message AI Fashion Mentor…"
               className="flex-1 resize-none rounded-2xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/25"
             />
 
