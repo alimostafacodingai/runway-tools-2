@@ -58,6 +58,11 @@ export async function runMentor({
   if (matchErr) {
     ragDebug.note = `match_knowledge_chunks error: ${matchErr.message ?? String(matchErr)}`;
   }
+if (debug) {
+  console.log("[DEBUG] SUPABASE_URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log("[DEBUG] matches length:", matches?.length ?? 0);
+  console.log("[DEBUG] first match preview:", matches?.[0]?.content?.slice?.(0, 120));
+}
 
   if (matches?.length) {
     ragDebug.usingRag = true;
