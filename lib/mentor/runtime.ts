@@ -11,88 +11,101 @@ const supabase = createClient(
 
 type ChatMsg = { role: "user" | "assistant"; text: string };
 
-export async function runMentor({
-  message,
-  history,
-}: {
+type RunMentorInput = {
   message: string;
   history?: ChatMsg[];
-}) {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("Missing OPENAI_API_KEY");
-  }
-    const RAG_DEBUG = process.env.RAG_DEBUG === "1";
+  debug?: boolean;
+  requestId?: string;
+};
 
-  // EXACT DEBUG OBJECT (keep this shape stable)
+type MentorResult =
+  | string
+  | {
+      answer: string;
+      debugInfo?: unknown;
+    };
+
+export async function runMentor({
+  message,
+  history = [],
+  debug = false,
+  requestId,
+}: RunMentorInput): Promise<MentorResult> {
+  if (!process.env.OPENAI_API_KEY) throw new Error("Missing OPENAI_API_KEY");
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
+
+  // ---------- RAG retrieval ----------
   const ragDebug = {
-    usingRag: false,                // should flip to true only when retrieval is wired
-    retrievedCount: 0,              // how many chunks/snippets you retrieved
-    sources: [] as Array<{
-      id: string;                   // file/chunk id
-      title?: string;
-      path?: string;
-    }>,
-    note:
-      "No retrieval wired yet: model only sees system + history + user message.",
+    usingRag: false,
+    retrievedCount: 0,
+    sources: [] as Array<{ id: string; title?: string; path?: string }>,
+    note: "No matches returned.",
   };
 
-  // clear any stale context from previous requests
-delete (globalThis as any).__RAG_CONTEXT__;
+  let ragContext = "NO_CONTEXT";
 
+  const queryEmbedding = await openai.embeddings.create({
+    model: "text-embedding-3-small",
+    input: message,
+  });
 
-// --- RAG retrieval ---
-const queryEmbedding = await openai.embeddings.create({
-  model: "text-embedding-3-small",
-  input: message,
-});
+  const { data: matches, error: matchErr } = await supabase.rpc("match_knowledge_chunks", {
+    query_embedding: queryEmbedding.data[0].embedding,
+    match_count: 6,
+  });
 
-const { data: matches, error: matchErr } = await supabase.rpc("match_knowledge_chunks", {
-  query_embedding: queryEmbedding.data[0].embedding,
-  match_count: 6,
-});
+  if (matchErr) {
+    ragDebug.note = `match_knowledge_chunks error: ${matchErr.message ?? String(matchErr)}`;
+  }
 
-if (matchErr) {
-  if (RAG_DEBUG) console.log("[RAG_DEBUG] match_knowledge_chunks error:", matchErr);
-}
+  if (matches?.length) {
+    ragDebug.usingRag = true;
+    ragDebug.retrievedCount = matches.length;
+    ragDebug.sources = matches.map((m: any) => ({
+      id: String(m.chunk_id ?? m.id),
+      title: m.title ?? `doc_id:${m.doc_id}`,
+      path: m.path ?? "",
+    }));
 
-if (matches?.length) {
-  ragDebug.usingRag = true;
-  ragDebug.retrievedCount = matches.length;
-  ragDebug.sources = matches.map((m: any) => ({
-    id: String(m.chunk_id ?? m.id),
-    title: m.title ?? `doc_id:${m.doc_id}`,
-    path: m.path ?? "",
-  }));
+    ragContext = matches
+      .map(
+        (m: any, i: number) =>
+          `[#${i + 1}] (doc_id:${m.doc_id}, chunk:${m.chunk_index})\n${m.content}`
+      )
+      .join("\n\n---\n\n");
 
-  const context = matches
-    .map((m: any, i: number) => `[#${i + 1}] (doc_id:${m.doc_id}, chunk:${m.chunk_index})\n${m.content}`)
-    .join("\n\n---\n\n");
+    ragDebug.note = "RAG context built and will be injected into the system prompt.";
+  }
 
-  ragDebug.note = "RAG wired: context injected into system message.";
-  (globalThis as any).__RAG_CONTEXT__ = context;
-}
+  // ---------- System prompt (this fixes the generic behavior) ----------
+  const SYSTEM_PROMPT = `
+You are "AI Fashion Mentor" inside the Runway Tools web app.
+Your job is to help the user use Runway Tools to make decisions and execute actions.
 
-  
+Rules:
+- Be specific and practical. Use structured steps.
+- If the user asks "what tools are in this webapp", answer with Runway Tools tools (pricing, break-even, cashflow, ROAS/CPA, dashboards, bookkeeping, etc.) based on CONTEXT below.
+- Prefer referencing the app's tools and workflows over generic advice.
+- If CONTEXT is NO_CONTEXT, say you may be missing the internal docs and ask what plan/page they are on, but still give a best-effort list of common Runway tools.
 
-  
-  
+CONTEXT (source of truth):
+${ragContext}
+`.trim();
 
-if (RAG_DEBUG) {
-  console.log("[RAG_DEBUG] message:", message);
-  console.log("[RAG_DEBUG] debug:", ragDebug);
-}
+  if (debug) {
+    console.log("==== RUNWAY runtime.ts DEBUG ====");
+    console.log("requestId:", requestId);
+    console.log("systemLen:", SYSTEM_PROMPT.length);
+    console.log("usingRag:", ragDebug.usingRag, "retrieved:", ragDebug.retrievedCount);
+    console.log("firstSource:", ragDebug.sources?.[0] ?? null);
+    console.log("contextPreview:", ragContext.slice(0, 300));
+    console.log("==== END DEBUG ====");
+  }
 
   const input = [
-   {
-  role: "system" as const,
-  content:
-    "Reply concisely. Follow the user's instruction exactly when possible.\n\n" +
-    "If the following CONTEXT is provided, use it as the source of truth:\n\n" +
-    "CONTEXT:\n" +
-    ((globalThis as any).__RAG_CONTEXT__ ?? "NO_CONTEXT"),
-},
-
-    ...(history ?? []).map((h) => ({ role: h.role as "user" | "assistant", content: h.text })),
+    { role: "system" as const, content: SYSTEM_PROMPT },
+    ...history.map((h) => ({ role: h.role as "user" | "assistant", content: h.text })),
     { role: "user" as const, content: message },
   ];
 
@@ -101,8 +114,20 @@ if (RAG_DEBUG) {
     input,
   });
 
-      const text = r.output_text ?? "";
-  return text;
+  const answer = r.output_text ?? "";
 
+  if (debug) {
+    return {
+      answer,
+      debugInfo: {
+        requestId,
+        ragDebug,
+        systemLen: SYSTEM_PROMPT.length,
+      },
+    };
+  }
 
+  return answer;
 }
+
+  
