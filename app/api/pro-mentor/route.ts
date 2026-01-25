@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { runMentor } from "@/lib/mentor/runtime";
 import { randomUUID } from "crypto";
 
@@ -20,20 +21,12 @@ export async function POST(req: Request) {
     const history = Array.isArray(body?.history) ? body.history : [];
 
     if (!message.trim()) {
-      return Response.json({ error: "Missing message" }, { status: 400 });
+      return NextResponse.json({ error: "Missing message" }, { status: 400 });
     }
 
     const debug =
       process.env.MENTOR_DEBUG === "true" ||
       req.headers.get("x-mentor-debug") === "1";
-
-    if (debug) {
-      console.log("==== RUNWAY MENTOR DEBUG START ====");
-      console.log("requestId:", requestId);
-      console.log("messageLength:", message.length);
-      console.log("historyCount:", history.length);
-      console.log("==== RUNWAY MENTOR DEBUG END ====");
-    }
 
     const result = (await runMentor({
       message,
@@ -43,24 +36,16 @@ export async function POST(req: Request) {
     })) as MentorResult;
 
     const answer = typeof result === "string" ? result : result.answer;
-    const debugInfo = typeof result === "string" ? undefined : result.debugInfo;
+    const debugInfo =
+      typeof result === "string" ? undefined : result.debugInfo;
 
     const ms = Date.now() - startedAt;
 
-    if (debug) {
-      console.log("requestId:", requestId, "done in", ms, "ms");
-    }
-
-    const payload: Record<string, unknown> = { answer };
-    if (debug) {
-      payload.debugInfo = debugInfo;
-      payload.requestId = requestId;
-      payload.ms = ms;
-    }
-
-    return Response.json(payload);
+    return NextResponse.json(
+      debug ? { answer, debugInfo, requestId, ms } : { answer }
+    );
   } catch (e: any) {
-    return Response.json(
+    return NextResponse.json(
       { error: "Server error", details: e?.message ?? String(e) },
       { status: 500 }
     );
