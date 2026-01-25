@@ -6,7 +6,7 @@ export default function Plans() {
   const router = useRouter();
 
   const beginnerCheckout =
-    "https://whop.com/checkout/plan_djwQaOyIWBpZo";
+    "https://whop.com/checkout/plan_LTyeLxIoU6b0l";
   const proCheckout =
     "https://whop.com/checkout/plan_ni4U7dhxJpJPk";
 
