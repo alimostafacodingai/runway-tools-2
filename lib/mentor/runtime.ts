@@ -100,7 +100,7 @@ Rules:
 - Be specific and practical. Use structured steps.
 - If the user asks "what tools are in this webapp", answer with Runway Tools tools (pricing, break-even, cashflow, ROAS/CPA, dashboards, bookkeeping, etc.) based on CONTEXT below.
 - Prefer referencing the app's tools and workflows over generic advice.
-- If CONTEXT is NO_CONTEXT, say you may be missing the internal docs and ask what plan/page they are on, but still give a best-effort list of common Runway tools.
+
 - do not list any tools that are not in you knowledge base.
 
 CONTEXT (source of truth):
