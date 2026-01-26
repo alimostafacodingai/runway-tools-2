@@ -49,11 +49,21 @@ export async function runMentor({
     model: "text-embedding-3-small",
     input: message,
   });
+const isToolsQuestion =
+  /what tools|which tools|tools in runway|features|what does runway tools do/i.test(
+    message
+  );
+const TOOLS_DOC_ID = 19;
 
-  const { data: matches, error: matchErr } = await supabase.rpc("match_knowledge_chunks", {
+  const { data: matches, error: matchErr } = await supabase.rpc(
+  "match_knowledge_chunks",
+  {
     query_embedding: queryEmbedding.data[0].embedding,
     match_count: 6,
-  });
+    filter_doc_ids: isToolsQuestion ? [TOOLS_DOC_ID] : null,
+  }
+);
+
 
   if (matchErr) {
     ragDebug.note = `match_knowledge_chunks error: ${matchErr.message ?? String(matchErr)}`;

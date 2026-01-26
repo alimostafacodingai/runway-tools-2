@@ -145,19 +145,21 @@ async function upsertDoc(title, source_path) {
 
   if (findErr) throw findErr;
 
-  // 2) If exists, wipe its chunks first
-  if (existing?.id) {
-    const { error: delErr } = await supabase
-      .from("knowledge_chunks")
-      .delete()
-      .eq("doc_id", existing.id);
+ // 2) If exists, wipe its chunks first BUT DO NOT return.
+// We want to re-ingest and recreate chunks.
+let docId = existing?.id ?? null;
 
-    if (delErr) throw delErr;
+if (docId) {
+  const { error: delErr } = await supabase
+    .from("knowledge_chunks")
+    .delete()
+    .eq("doc_id", docId);
 
-    return existing.id;
-  }
+  if (delErr) throw delErr;
+}
 
-  // 3) Otherwise create the doc row (bucket/path are required)
+
+  if (!docId) {
   const { data, error } = await supabase
     .from("knowledge_docs")
     .upsert(
@@ -174,8 +176,11 @@ async function upsertDoc(title, source_path) {
     .single();
 
   if (error) throw error;
+  docId = data.id;
+}
 
-  return data.id;
+return docId;
+
 }
 
 
