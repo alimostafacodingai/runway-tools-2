@@ -55,14 +55,12 @@ const isToolsQuestion =
   );
 const TOOLS_DOC_ID = 19;
 
-  const { data: matches, error: matchErr } = await supabase.rpc(
-  "match_knowledge_chunks",
-  {
-    query_embedding: queryEmbedding.data[0].embedding,
-    match_count: 6,
-    filter_doc_ids: isToolsQuestion ? [TOOLS_DOC_ID] : null,
-  }
-);
+  const { data: matches, error: matchErr } = await supabase.rpc("match_knowledge_chunks", {
+  query_embedding: queryEmbedding.data[0].embedding,
+  match_count: 6,
+  filter_doc_ids: isToolsQuestion ? [TOOLS_DOC_ID] : null,
+});
+
 
 
   if (matchErr) {
