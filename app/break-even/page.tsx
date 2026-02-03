@@ -9,7 +9,17 @@ export default function BreakEvenPage() {
   const [unitsPlanned, setUnitsPlanned] = useState(0);
   const [targetProfit, setTargetProfit] = useState(0);
 
-  const SYMBOL = "E£";
+  const CURRENCIES = {
+    EGP: { symbol: "E£", label: "EGP (E£)" },
+    USD: { symbol: "$", label: "USD ($)" },
+    EUR: { symbol: "€", label: "EUR (€)" },
+    GBP: { symbol: "£", label: "GBP (£)" },
+    SAR: { symbol: "SAR ", label: "SAR (SAR)" },
+    AED: { symbol: "AED ", label: "AED (AED)" },
+  } as const;
+
+  const [currency, setCurrency] = useState<keyof typeof CURRENCIES>("EGP");
+  const SYMBOL = CURRENCIES[currency].symbol;
 
   function money(n: number) {
     if (!isFinite(n)) n = 0;
@@ -203,6 +213,27 @@ export default function BreakEvenPage() {
           font-size: 11px;
           color: #fee2e2;
         }
+
+        .headerRight {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .currencySelect {
+          height: 28px;
+          padding: 4px 10px;
+          border-radius: 999px;
+          border: 1px solid var(--border);
+          background: #0e1230;
+          color: #e9ecff;
+          font-size: 12px;
+          outline: none;
+          cursor: pointer;
+        }
+        .currencySelect:focus {
+          border-color: #6f84ff;
+          box-shadow: 0 0 0 3px rgba(127, 152, 255, 0.2);
+        }
       `}</style>
 
       <main>
@@ -291,9 +322,7 @@ export default function BreakEvenPage() {
                   value={targetProfit || ""}
                   onChange={(e) => setTargetProfit(parseFloat(e.target.value || "0"))}
                 />
-                <p className="smallNote">
-                  How much money you want to make after all costs.
-                </p>
+                <p className="smallNote">How much money you want to make after all costs.</p>
               </div>
             </div>
 
@@ -309,7 +338,23 @@ export default function BreakEvenPage() {
           <div className="card">
             <div className="cardHeader">
               <h3 className="title">Results</h3>
-              <span className="pill">Live</span>
+
+              <div className="headerRight">
+                <select
+                  className="currencySelect"
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value as keyof typeof CURRENCIES)}
+                  aria-label="Currency"
+                >
+                  {Object.entries(CURRENCIES).map(([code, meta]) => (
+                    <option key={code} value={code}>
+                      {meta.label}
+                    </option>
+                  ))}
+                </select>
+
+                <span className="pill">Live</span>
+              </div>
             </div>
 
             <div className="row">

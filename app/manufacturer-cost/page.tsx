@@ -2,25 +2,36 @@
 
 import { useState } from "react";
 
-const CURRENCY = "E£";
+const CURRENCIES = {
+  EGP: { symbol: "E£", label: "EGP (E£)" },
+  USD: { symbol: "$", label: "USD ($)" },
+  EUR: { symbol: "€", label: "EUR (€)" },
+  GBP: { symbol: "£", label: "GBP (£)" },
+  SAR: { symbol: "SAR ", label: "SAR (SAR)" },
+  AED: { symbol: "AED ", label: "AED (AED)" },
+} as const;
 
 function toNumber(value: string): number {
   const n = parseFloat(value);
   return isNaN(n) ? 0 : n;
 }
 
-function money(n: number): string {
-  if (!isFinite(n)) n = 0;
-  return (
-    CURRENCY +
-    n.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })
-  );
-}
-
 export default function ManufacturerCostPage() {
+  // Currency (symbol only, no conversion)
+  const [currency, setCurrency] = useState<keyof typeof CURRENCIES>("EGP");
+  const CURRENCY = CURRENCIES[currency].symbol;
+
+  function money(n: number): string {
+    if (!isFinite(n)) n = 0;
+    return (
+      CURRENCY +
+      n.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    );
+  }
+
   // Inputs
   const [units, setUnits] = useState("0");
   const [styleName, setStyleName] = useState("");
@@ -48,8 +59,7 @@ export default function ManufacturerCostPage() {
   const ordDutyNum = toNumber(ordDuty);
   const ordOtherNum = toNumber(ordOther);
 
-  const perUnitSum =
-    puFabricNum + puCutNum + puPrintNum + puTrimsNum + puPackNum;
+  const perUnitSum = puFabricNum + puCutNum + puPrintNum + puTrimsNum + puPackNum;
   const orderLevelSum = ordShipNum + ordDutyNum + ordOtherNum;
 
   const varTotal = perUnitSum * unitsNum;
@@ -132,34 +142,13 @@ export default function ManufacturerCostPage() {
             </p>
 
             <div className="grid gap-3 md:grid-cols-2">
-              <NumberInput
-                label="Fabric / materials per unit"
-                value={puFabric}
-                onChange={setPuFabric}
-              />
-              <NumberInput
-                label="Cut & sew labour per unit"
-                value={puCut}
-                onChange={setPuCut}
-              />
-              <NumberInput
-                label="Print / embroidery per unit"
-                value={puPrint}
-                onChange={setPuPrint}
-              />
-              <NumberInput
-                label="Trims & labels per unit"
-                value={puTrims}
-                onChange={setPuTrims}
-              />
-              <NumberInput
-                label="Packaging per unit"
-                value={puPack}
-                onChange={setPuPack}
-              />
+              <NumberInput label="Fabric / materials per unit" value={puFabric} onChange={setPuFabric} />
+              <NumberInput label="Cut & sew labour per unit" value={puCut} onChange={setPuCut} />
+              <NumberInput label="Print / embroidery per unit" value={puPrint} onChange={setPuPrint} />
+              <NumberInput label="Trims & labels per unit" value={puTrims} onChange={setPuTrims} />
+              <NumberInput label="Packaging per unit" value={puPack} onChange={setPuPack} />
             </div>
 
-            {/* Explanation Cut & Sew vs Trims */}
             <p className="mt-2 text-[11px] text-zinc-400">
               <strong>Cut &amp; sew = labour</strong> the factory charges to turn
               fabric into a finished garment (cutting panels, stitching, assembling).
@@ -183,21 +172,9 @@ export default function ManufacturerCostPage() {
             </p>
 
             <div className="grid gap-3 md:grid-cols-2">
-              <NumberInput
-                label="Bulk shipping to you"
-                value={ordShip}
-                onChange={setOrdShip}
-              />
-              <NumberInput
-                label="Customs / duty / tax"
-                value={ordDuty}
-                onChange={setOrdDuty}
-              />
-              <NumberInput
-                label="Other order costs"
-                value={ordOther}
-                onChange={setOrdOther}
-              />
+              <NumberInput label="Bulk shipping to you" value={ordShip} onChange={setOrdShip} />
+              <NumberInput label="Customs / duty / tax" value={ordDuty} onChange={setOrdDuty} />
+              <NumberInput label="Other order costs" value={ordOther} onChange={setOrdOther} />
             </div>
 
             <p className="mt-2 text-[11px] text-zinc-400">
@@ -212,10 +189,27 @@ export default function ManufacturerCostPage() {
           <div>
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-lg font-semibold">Cost Summary</h2>
-              <span className="text-[11px] px-2 py-0.5 rounded-full border border-zinc-700 text-zinc-300 bg-zinc-900/70">
-                All-in
-              </span>
+
+              <div className="flex items-center gap-2">
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value as keyof typeof CURRENCIES)}
+                  className="h-7 rounded-full border border-zinc-700 bg-zinc-950/60 px-3 text-[11px] text-zinc-200 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-500/40"
+                  aria-label="Currency"
+                >
+                  {Object.entries(CURRENCIES).map(([code, meta]) => (
+                    <option key={code} value={code}>
+                      {meta.label}
+                    </option>
+                  ))}
+                </select>
+
+                <span className="text-[11px] px-2 py-0.5 rounded-full border border-zinc-700 text-zinc-300 bg-zinc-900/70">
+                  All-in
+                </span>
+              </div>
             </div>
+
             <p className="text-[11px] text-zinc-400">
               Numbers below update automatically as you type. Currency is shown as{" "}
               <strong>{CURRENCY}</strong> by default – just think in the same currency
@@ -225,32 +219,19 @@ export default function ManufacturerCostPage() {
 
           <div className="space-y-1">
             <SummaryRow label="Units in order" value={unitsNum.toString()} />
-            <SummaryRow
-              label="Sum of per-unit costs"
-              value={money(perUnitSum)}
-            />
-            <SummaryRow
-              label="Total variable (per-unit × units)"
-              value={money(varTotal)}
-            />
-            <SummaryRow
-              label="Total order-level costs"
-              value={money(orderLevelSum)}
-            />
+            <SummaryRow label="Sum of per-unit costs" value={money(perUnitSum)} />
+            <SummaryRow label="Total variable (per-unit × units)" value={money(varTotal)} />
+            <SummaryRow label="Total order-level costs" value={money(orderLevelSum)} />
           </div>
 
           <div className="mt-2 rounded-2xl border border-zinc-700 bg-gradient-to-br from-violet-600/30 via-violet-700/10 to-cyan-500/20 px-4 py-3 shadow-[0_18px_45px_rgba(0,0,0,0.65)]">
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm text-zinc-100">All-in cost per unit</span>
-              <span className="text-lg font-extrabold">
-                {money(allInPerUnit)}
-              </span>
+              <span className="text-lg font-extrabold">{money(allInPerUnit)}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="text-zinc-200">Total order cost (all-in)</span>
-              <span className="font-semibold text-zinc-100">
-                {money(totalOrder)}
-              </span>
+              <span className="font-semibold text-zinc-100">{money(totalOrder)}</span>
             </div>
             <p className="mt-2 text-[11px] text-zinc-200/80">
               All-in cost per unit = (total per-unit costs × units + all order-level

@@ -2,6 +2,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+const CURRENCIES = {
+  EGP: { symbol: "E£", label: "EGP (E£)" },
+  USD: { symbol: "$", label: "USD ($)" },
+  EUR: { symbol: "€", label: "EUR (€)" },
+  GBP: { symbol: "£", label: "GBP (£)" },
+  SAR: { symbol: "SAR ", label: "SAR (SAR)" },
+  AED: { symbol: "AED ", label: "AED (AED)" },
+} as const;
+
 type Category =
   | "sales"
   | "c_mat"
@@ -39,6 +48,21 @@ export default function RunwayDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Currency (symbol only, no conversion)
+  const [currency, setCurrency] = useState<keyof typeof CURRENCIES>("EGP");
+  const SYMBOL = CURRENCIES[currency].symbol;
+
+  function fmt(n: number) {
+    if (!isFinite(n)) n = 0;
+    return (
+      SYMBOL +
+      n.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    );
+  }
+
   // 🔹 Load bookkeeping data for the LOGGED IN USER
   useEffect(() => {
     async function load() {
@@ -54,13 +78,12 @@ export default function RunwayDashboardPage() {
 
         const data = await res.json();
 
-// Support [] OR { entries: [] } OR { items: [] } OR { transactions: [] }
-const items: Transaction[] = Array.isArray(data)
-  ? data
-  : data.entries || data.items || data.transactions || [];
+        // Support [] OR { entries: [] } OR { items: [] } OR { transactions: [] }
+        const items: Transaction[] = Array.isArray(data)
+          ? data
+          : data.entries || data.items || data.transactions || [];
 
-setTransactions(items || []);
-
+        setTransactions(items || []);
       } catch (err: any) {
         console.error(err);
         setError(err.message || "Something went wrong");
@@ -85,7 +108,6 @@ setTransactions(items || []);
   const thisMonthTransactions = useMemo(() => {
     return transactions.filter((t) => {
       if (!t.date) return false;
-      // Expect "YYYY-MM-DD"
       const d = new Date(t.date + "T00:00:00");
       return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
     });
@@ -139,25 +161,42 @@ setTransactions(items || []);
     };
   }, [thisMonthTransactions]);
 
-  function fmt(n: number) {
-    if (!isFinite(n)) n = 0;
-    return "E£" + n.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
   return (
     <main className="min-h-screen bg-black text-white px-6 py-8">
       <section className="max-w-6xl mx-auto mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">
-          Runway Dashboard
-        </h1>
-        <p className="text-sm text-zinc-400">
-          Live summary for <span className="font-semibold">{monthLabel}</span>{" "}
-          based on your bookkeeping entries. This is your money control centre:
-          revenue, costs, profit, and what you keep in the business.
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              Runway Dashboard
+            </h1>
+            <p className="text-sm text-zinc-400">
+              Live summary for <span className="font-semibold">{monthLabel}</span>{" "}
+              based on your bookkeeping entries. This is your money control centre:
+              revenue, costs, profit, and what you keep in the business.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <select
+              value={currency}
+              onChange={(e) =>
+                setCurrency(e.target.value as keyof typeof CURRENCIES)
+              }
+              className="h-8 rounded-full border border-zinc-700 bg-zinc-950/60 px-3 text-xs text-zinc-200 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-500/40"
+              aria-label="Currency"
+            >
+              {Object.entries(CURRENCIES).map(([code, meta]) => (
+                <option key={code} value={code}>
+                  {meta.label}
+                </option>
+              ))}
+            </select>
+
+            <span className="text-[11px] px-2 py-0.5 rounded-full border border-zinc-700 text-zinc-300 bg-zinc-900/70">
+              This page
+            </span>
+          </div>
+        </div>
       </section>
 
       <section className="max-w-6xl mx-auto space-y-6">
@@ -192,18 +231,14 @@ setTransactions(items || []);
                 title="Retained profit"
                 value={fmt(totals.retainedProfit)}
                 subtitle="Net profit minus owner's withdrawals"
-                highlight={
-                  totals.retainedProfit >= 0 ? "positive" : "negative"
-                }
+                highlight={totals.retainedProfit >= 0 ? "positive" : "negative"}
               />
             </div>
 
             {/* 🔸 Profit structure + Owner */}
             <div className="grid gap-4 md:grid-cols-2">
               <div className="bg-zinc-900/70 border border-zinc-800 rounded-2xl p-5 space-y-3">
-                <h2 className="text-lg font-semibold mb-1">
-                  Profit structure
-                </h2>
+                <h2 className="text-lg font-semibold mb-1">Profit structure</h2>
                 <p className="text-xs text-zinc-400 mb-2">
                   How your sales turn into profit this month.
                 </p>
@@ -224,12 +259,12 @@ setTransactions(items || []);
 
                 <div className="mt-3 text-[11px] text-zinc-500 space-y-1">
                   <p>
-                    • Gross profit = Revenue − COGS (fabric, production,
-                    packaging, shipping-to-you).
+                    • Gross profit = Revenue − COGS (fabric, production, packaging,
+                    shipping-to-you).
                   </p>
                   <p>
-                    • Net profit = Gross profit − OPEX (marketing, rent,
-                    website, salaries, etc.).
+                    • Net profit = Gross profit − OPEX (marketing, rent, website,
+                    salaries, etc.).
                   </p>
                 </div>
               </div>
@@ -251,19 +286,17 @@ setTransactions(items || []);
                   label="Retained profit"
                   value={fmt(totals.retainedProfit)}
                   strong
-                  highlight={
-                    totals.retainedProfit >= 0 ? "positive" : "negative"
-                  }
+                  highlight={totals.retainedProfit >= 0 ? "positive" : "negative"}
                 />
 
                 <div className="mt-3 text-[11px] text-zinc-500 space-y-1">
                   <p>
-                    • Owner&apos;s withdrawals = money you take out for yourself
-                    (not a business expense).
+                    • Owner&apos;s withdrawals = money you take out for yourself (not
+                    a business expense).
                   </p>
                   <p>
-                    • Retained profit = Net profit − withdrawals. This is what
-                    stays in the company to fund the next drops.
+                    • Retained profit = Net profit − withdrawals. This is what stays
+                    in the company to fund the next drops.
                   </p>
                 </div>
               </div>
@@ -272,9 +305,7 @@ setTransactions(items || []);
             {/* 🔸 This month's transactions table */}
             <div className="bg-zinc-900/70 border border-zinc-800 rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold">
-                  This month&apos;s entries
-                </h2>
+                <h2 className="text-lg font-semibold">This month&apos;s entries</h2>
                 <p className="text-xs text-zinc-400">
                   {thisMonthTransactions.length} transaction
                   {thisMonthTransactions.length === 1 ? "" : "s"}
@@ -294,10 +325,7 @@ setTransactions(items || []);
                   <tbody>
                     {thisMonthTransactions.length === 0 && (
                       <tr>
-                        <Td
-                          colSpan={4}
-                          className="text-center text-zinc-500 py-4"
-                        >
+                        <Td colSpan={4} className="text-center text-zinc-500 py-4">
                           No bookkeeping entries for this month yet.
                         </Td>
                       </tr>
@@ -319,10 +347,8 @@ setTransactions(items || []);
               </div>
 
               <p className="mt-3 text-[11px] text-zinc-500">
-                Edit your data from the{" "}
-                <span className="font-semibold">Bookkeeping</span> page. This
-                dashboard is read-only and always reflects your latest entries
-                for this account.
+                Edit your data from the <span className="font-semibold">Bookkeeping</span> page.
+                This dashboard is read-only and always reflects your latest entries for this account.
               </p>
             </div>
           </>
@@ -356,9 +382,7 @@ function StatCard({
     <div className="bg-zinc-900/70 border border-zinc-800 rounded-2xl p-5">
       <p className="text-xs text-zinc-400 mb-1">{title}</p>
       <p className={`text-xl font-semibold ${highlightClass}`}>{value}</p>
-      {subtitle && (
-        <p className="text-[11px] text-zinc-500 mt-1">{subtitle}</p>
-      )}
+      {subtitle && <p className="text-[11px] text-zinc-500 mt-1">{subtitle}</p>}
     </div>
   );
 }
@@ -384,9 +408,7 @@ function Row({
   return (
     <div className="flex items-center justify-between text-sm">
       <span className="text-zinc-400 text-xs">{label}</span>
-      <span
-        className={`text-sm ${strong ? "font-semibold" : ""} ${highlightClass}`}
-      >
+      <span className={`text-sm ${strong ? "font-semibold" : ""} ${highlightClass}`}>
         {value}
       </span>
     </div>
@@ -401,11 +423,7 @@ function Th({
   align?: "left" | "right" | "center";
 }) {
   const alignClass =
-    align === "right"
-      ? "text-right"
-      : align === "center"
-      ? "text-center"
-      : "text-left";
+    align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left";
 
   return (
     <th
@@ -428,11 +446,7 @@ function Td({
   align?: "left" | "right" | "center";
 }) {
   const alignClass =
-    align === "right"
-      ? "text-right"
-      : align === "center"
-      ? "text-center"
-      : "text-left";
+    align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left";
 
   return (
     <td
