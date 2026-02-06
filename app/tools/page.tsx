@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function ToolsPage() {
@@ -11,42 +12,48 @@ export default function ToolsPage() {
       <section className="max-w-4xl mx-auto mb-10">
         <h1 className="text-4xl font-bold mb-3">Runway Tools – Free Plan</h1>
         <p className="text-zinc-300">
-          Start for free with core templates and Fashion Mentor AI Lite.
-          When you&apos;re ready to plug in real numbers and get full analysis, you can upgrade anytime.
+          Start for free with core templates and Fashion Mentor AI Lite. When
+          you&apos;re ready to plug in real numbers and get full analysis, you can
+          upgrade anytime.
         </p>
       </section>
 
       <section className="max-w-5xl mx-auto space-y-10">
         {/* Fashion Mentor AI Lite */}
         <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-2xl font-semibold mb-2">AI Fashion Mentor - Basic Access</h2>
+          <h2 className="text-2xl font-semibold mb-2">
+            AI Fashion Mentor - Basic Access
+          </h2>
           <p className="text-zinc-400 mb-4">
-            Ask how each Runway Tools calculator works, what it does, and which tool to use for what.
-            For &quot;is this good or bad?&quot; decisions and full strategy, upgrade to Fashion Mentor AI Pro.
+            Ask how each Runway Tools calculator works, what it does, and which
+            tool to use for what. For &quot;is this good or bad?&quot; decisions and full
+            strategy, upgrade to Fashion Mentor AI Pro.
           </p>
 
-          <button
-  type="button"
-  onClick={() => router.push("/pro/mentor")}
-  className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:opacity-90"
->
-  Open AI Fashion Mentor
-</button>
-
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/pro/mentor")}
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:opacity-90"
+            >
+              Open AI Fashion Mentor
+            </button>
+          </div>
         </div>
 
         {/* Free PDFs / Templates */}
         <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-2xl font-semibold mb-4">Free Templates &amp; PDFs</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            Free Templates &amp; calculators
+          </h2>
           <p className="text-zinc-400 mb-4">
-            Download these starter templates to plan your brand and understand the basics before upgrading
-            to the full calculators and dashboards.
+            Download these starter templates to plan your brand and understand
+            the basics before upgrading to the full calculators and dashboards.
           </p>
 
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {/* Business Plan Template */}
             <a
-              href="/pdfs/business-plan-template.pdf" // make sure this matches the actual file name
+              href="/pdfs/business-plan-template.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
               target="_blank"
               rel="noreferrer"
@@ -59,7 +66,6 @@ export default function ToolsPage() {
               </p>
             </a>
 
-            {/* Brand Identity Starter */}
             <a
               href="/pdfs/brand-identity-template.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -74,7 +80,6 @@ export default function ToolsPage() {
               </p>
             </a>
 
-            {/* Email Marketing Templates */}
             <a
               href="/pdfs/email-marketing-templates.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -89,7 +94,6 @@ export default function ToolsPage() {
               </p>
             </a>
 
-            {/* Product Design Worksheet */}
             <a
               href="/pdfs/product-design-worksheet.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -100,11 +104,11 @@ export default function ToolsPage() {
                 Product Design Worksheet
               </h3>
               <p className="text-xs text-zinc-400">
-                Structure your product ideas, fabrics, fits and details before sampling.
+                Structure your product ideas, fabrics, fits and details before
+                sampling.
               </p>
             </a>
 
-            {/* Refund & Exchange Policy */}
             <a
               href="/pdfs/Refund_and_Exchange_Policy_Template.docx.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -115,11 +119,11 @@ export default function ToolsPage() {
                 Refund &amp; Exchange Policy
               </h3>
               <p className="text-xs text-zinc-400">
-                Ready-to-edit policy to protect your brand and set clear rules for customers.
+                Ready-to-edit policy to protect your brand and set clear rules
+                for customers.
               </p>
             </a>
 
-            {/* Shopify Product Description Template */}
             <a
               href="/pdfs/Shopify-product-description-template(3).pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -134,7 +138,6 @@ export default function ToolsPage() {
               </p>
             </a>
 
-            {/* Size Chart Template */}
             <a
               href="/pdfs/size-chart-template.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -149,7 +152,6 @@ export default function ToolsPage() {
               </p>
             </a>
 
-            {/* Supplier Outreach Email Template */}
             <a
               href="/pdfs/supplier-outreach-email-template.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -160,11 +162,11 @@ export default function ToolsPage() {
                 Supplier Outreach Email
               </h3>
               <p className="text-xs text-zinc-400">
-                Professional outreach script to contact manufacturers and suppliers.
+                Professional outreach script to contact manufacturers and
+                suppliers.
               </p>
             </a>
 
-            {/* Weekly Content Calendar */}
             <a
               href="/pdfs/weekly-content-calendar.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -175,11 +177,11 @@ export default function ToolsPage() {
                 Weekly Content Calendar
               </h3>
               <p className="text-xs text-zinc-400">
-                Plan your TikTok, Reels and posts for the whole week in one place.
+                Plan your TikTok, Reels and posts for the whole week in one
+                place.
               </p>
             </a>
 
-            {/* Label & Invoice Template (Arabic / English) */}
             <a
               href="/pdfs/label-invoice-template-arabic-english(1).docx.pdf"
               className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
@@ -190,18 +192,84 @@ export default function ToolsPage() {
                 Label &amp; Invoice Template (Arabic / English)
               </h3>
               <p className="text-xs text-zinc-400">
-                Editable Google Docs template for invoices and shipping labels in Arabic &amp; English.
+                Editable Google Docs template for invoices and shipping labels in
+                Arabic &amp; English.
               </p>
             </a>
           </div>
         </div>
 
+        {/* NEW: Free Calculators */}
+        <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6">
+          <h2 className="text-2xl font-semibold mb-4">Free Calculators</h2>
+          <p className="text-zinc-400 mb-4">
+            Use the free calculators to plug in costs and get your baseline numbers.
+            Full pricing decisions and profit analysis is unlocked in the paid plans.
+          </p>
+
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+  <Link
+    href="/pricing-calculator-free"
+    className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
+  >
+    <h3 className="font-semibold group-hover:text-white text-sm">
+      Pricing Calculator (Free)
+    </h3>
+    <p className="text-xs text-zinc-400">
+      Enter unit costs and see your total unit cost. Decision view is locked.
+    </p>
+  </Link>
+
+  <Link
+    href="/breakeven-profit-estimator-free"
+    className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
+  >
+    <h3 className="font-semibold group-hover:text-white text-sm">
+      Break-Even &amp; Profit Estimator (Free)
+    </h3>
+    <p className="text-xs text-zinc-400">
+      Enter price and costs to see contribution margin per unit. Full analysis is locked.
+    </p>
+  </Link>
+
+  <Link
+  href="/packaging-cost-builder"
+  className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
+>
+  <h3 className="font-semibold group-hover:text-white text-sm">
+    Packaging Cost Builder (Free)
+  </h3>
+  <p className="text-xs text-zinc-400">
+    Calculate packaging cost per order and per item, plus monthly packaging spend.
+  </p>
+</Link>
+
+<Link
+  href="/production-planner-free"
+  className="block group rounded-xl border border-zinc-800 px-4 py-3 hover:border-zinc-500 transition"
+>
+  <h3 className="font-semibold group-hover:text-white text-sm">
+    Production Planner &amp; MOQ Optimizer (Free)
+  </h3>
+  <p className="text-xs text-zinc-400">
+    Enter constraints to see MOQ vs demand visibility, total cost, and conflicts. Recommendations are locked.
+  </p>
+</Link>
+
+
+</div>
+
+        </div>
+
         {/* Upgrade Tease */}
         <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-xl font-semibold mb-2">Upgrade when you&apos;re ready</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Upgrade when you&apos;re ready
+          </h2>
           <p className="text-zinc-400 mb-4 text-sm">
-            Stay on Free as long as you want. When you&apos;re ready to use full calculators, bookkeeping,
-            dashboards and Fashion Mentor AI Pro, you can upgrade to a paid plan in a few seconds.
+            Stay on Free as long as you want. When you&apos;re ready to use full
+            calculators, bookkeeping, dashboards and Fashion Mentor AI Pro, you
+            can upgrade to a paid plan in a few seconds.
           </p>
 
           <button

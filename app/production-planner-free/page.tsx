@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
-export default function ProductionPlannerPage() {
+export default function ProductionPlannerFreePage() {
   useEffect(() => {
     const SYMBOL: Record<string, string> = {
       EGP: "E£",
@@ -43,15 +44,14 @@ export default function ProductionPlannerPage() {
       if (el) el.textContent = val;
     }
 
-    // NEW: for the conflicts list (uses controlled strings we generate)
     function setHTML(id: string, val: string) {
       const el = document.getElementById(id);
       if (el) el.innerHTML = val;
     }
 
     function compute() {
-      const unitCost = num("unitCost");
-      const moqPerStyle = num("moqPerStyle");
+      const unitCost = Math.max(0, num("unitCost"));
+      const moqPerStyle = Math.max(0, num("moqPerStyle"));
       const styles = Math.max(0, num("styles"));
       const demandUnits = Math.max(0, num("demandUnits"));
       const safetyPct = Math.max(0, num("safetyPct"));
@@ -60,52 +60,31 @@ export default function ProductionPlannerPage() {
 
       const totalMOQUnits = moqPerStyle * styles;
       const demandWithSafety = demandUnits * (1 + safetyPct / 100);
-      const baseRecommended = Math.max(totalMOQUnits || 0, demandWithSafety || 0);
 
+      // Budget capacity in units (visibility, not recommendation)
       let budgetMaxUnits = Infinity;
       if (budget > 0 && unitCost > 0) {
         budgetMaxUnits = Math.floor(budget / unitCost);
       }
 
-      const plannedUnits =
-        budgetMaxUnits === Infinity
-          ? Math.round(baseRecommended)
-          : Math.round(Math.min(baseRecommended, budgetMaxUnits));
+      // We KEEP total production cost in Free (value prop),
+      // but we DO NOT show recommendations/plans.
+      const floorUnits = Math.max(totalMOQUnits || 0, demandWithSafety || 0);
+      const effectiveUnits =
+        budgetMaxUnits === Infinity ? floorUnits : Math.min(floorUnits, budgetMaxUnits);
 
-      const plannedPerStyle = styles > 0 ? Math.round(plannedUnits / styles) : 0;
-      const totalCost = plannedUnits * unitCost;
-      const budgetUsagePct =
-        budget > 0 ? Math.min(100, (totalCost / budget) * 100) : 0;
+      const totalCost = effectiveUnits * unitCost;
 
-      let driver =
-        "Based on your inputs, demand + safety stock is driving your plan.";
-      if (baseRecommended === totalMOQUnits && totalMOQUnits > 0) {
-        driver = "Your MOQ is higher than demand, so MOQ is driving your plan.";
-      }
-      if (budgetMaxUnits !== Infinity && budgetMaxUnits < baseRecommended) {
-        driver =
-          "Your budget is lower than the MOQ + demand requirement, so budget is capping your plan.";
-      }
-
+      // LEFT + shared visibility outputs
       setText("totalMOQUnitsOut", nfmt(totalMOQUnits));
       setText("demandWithSafetyOut", nfmt(demandWithSafety));
-      setText("baseRecommendedOut", nfmt(baseRecommended));
-      setText("plannedUnitsOut", nfmt(plannedUnits));
-      setText("plannedPerStyleOut", nfmt(plannedPerStyle));
-      setText("totalCostOut", money(totalCost));
-      setText(
-        "budgetUsageOut",
-        budget > 0 ? `${budgetUsagePct.toFixed(1)}% of budget` : "No budget limit"
-      );
       setText("leadTimeOut", leadTime > 0 ? `${leadTime} weeks` : "Not set");
-      setText("driverOut", driver);
+      setText("totalCostOut", money(totalCost));
 
-      // ============================
-      // PAID: Conflicts between constraints
-      // ============================
+      // Conflicts (YES, show them in Free)
       const conflicts: string[] = [];
 
-      // Demand vs MOQ visibility
+      // Demand vs MOQ
       if (totalMOQUnits > 0 && demandWithSafety > 0) {
         if (demandWithSafety > totalMOQUnits) {
           conflicts.push(
@@ -122,7 +101,7 @@ export default function ProductionPlannerPage() {
         }
       }
 
-      // Budget conflict
+      // Budget conflicts
       if (budgetMaxUnits !== Infinity) {
         if (totalMOQUnits > 0 && budgetMaxUnits < totalMOQUnits) {
           conflicts.push(
@@ -144,14 +123,10 @@ export default function ProductionPlannerPage() {
 
       // Input completeness nudges
       if (styles === 0 && moqPerStyle > 0) {
-        conflicts.push(
-          `Set <strong>Number of styles</strong> to calculate total MOQ units.`
-        );
+        conflicts.push(`Set <strong>Number of styles</strong> to calculate total MOQ units.`);
       }
       if (unitCost <= 0 && budget > 0) {
-        conflicts.push(
-          `Set <strong>Unit manufacturing cost</strong> to translate budget into units.`
-        );
+        conflicts.push(`Set <strong>Unit manufacturing cost</strong> to translate budget into units.`);
       }
 
       if (conflicts.length === 0) {
@@ -167,6 +142,13 @@ export default function ProductionPlannerPage() {
           </ul>`
         );
       }
+
+      // LOCKED OUTPUTS (right panel should show dashes like paid layout)
+      setText("baseRecommendedOut", "—");
+      setText("plannedUnitsOut", "—");
+      setText("plannedPerStyleOut", "—");
+      setText("budgetUsageOut", "—");
+      setText("driverOut", "—");
     }
 
     const inputIds = [
@@ -191,16 +173,12 @@ export default function ProductionPlannerPage() {
     });
 
     const currSel = document.getElementById("currency") as HTMLSelectElement | null;
-
     const currHandler = () => {
       if (!currSel) return;
       curr = currSel.value;
       compute();
     };
-
-    if (currSel) {
-      currSel.addEventListener("change", currHandler);
-    }
+    if (currSel) currSel.addEventListener("change", currHandler);
 
     compute();
 
@@ -244,12 +222,7 @@ export default function ProductionPlannerPage() {
     }
 
     .prod-root h1 { margin: 0 0 8px 0; font-size: 26px; }
-
-    .sub {
-      color: var(--muted);
-      margin: 6px 0 18px 0;
-      max-width: 780px;
-    }
+    .sub { color: var(--muted); margin: 6px 0 18px 0; max-width: 780px; }
 
     .toolbar {
       display: flex;
@@ -281,11 +254,7 @@ export default function ProductionPlannerPage() {
     }
 
     .card {
-      background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.03),
-        rgba(255, 255, 255, 0.01)
-      );
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
       border-radius: var(--radius);
       padding: 18px;
       box-shadow: none;
@@ -318,12 +287,7 @@ export default function ProductionPlannerPage() {
       background: rgba(124, 92, 255, 0.12);
     }
 
-    label {
-      display: block;
-      font-size: 13px;
-      color: #cfd3ff;
-      margin-bottom: 4px;
-    }
+    label { display:block; font-size: 13px; color: #cfd3ff; margin-bottom: 4px; }
 
     input[type="number"] {
       width: 100%;
@@ -339,7 +303,7 @@ export default function ProductionPlannerPage() {
 
     input[type="number"]:focus {
       border-color: #6f84ff;
-      box-shadow: 0 0 0 3px rgba(127, 152, 255, 0.2);
+      box-shadow: 0 0 0 3px rgba(127,152,255,0.2);
     }
 
     .smallNote { font-size: 11px; color: #a7acd4; margin-top: 4px; }
@@ -377,11 +341,7 @@ export default function ProductionPlannerPage() {
     .summaryValue { font-weight: 600; }
 
     .priceCard {
-      background: linear-gradient(
-        135deg,
-        rgba(124, 92, 255, 0.25),
-        rgba(0, 212, 255, 0.25)
-      );
+      background: linear-gradient(135deg, rgba(124, 92, 255, 0.25), rgba(0, 212, 255, 0.25));
       border-radius: var(--radius);
       padding: 14px;
       margin-top: 10px;
@@ -402,12 +362,36 @@ export default function ProductionPlannerPage() {
     .explain {
       font-size: 12px;
       color: #cfd3ff;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       padding: 10px;
       border-radius: 12px;
       margin-top: 10px;
       line-height: 1.5;
     }
+
+    .lockLine {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #cfd3ff;
+      opacity: 0.85;
+    }
+
+    .ctaWrap { margin-top: 12px; }
+
+    .ctaBtn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: linear-gradient(90deg, rgba(124,92,255,0.25), rgba(0,212,255,0.22));
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .ctaBtn:hover { filter: brightness(1.1); }
   `;
 
   return (
@@ -430,12 +414,12 @@ export default function ProductionPlannerPage() {
       </div>
 
       <p className="sub">
-        Plan your total production units per drop, check MOQ constraints and see how
-        your budget, expected demand and safety stock change the final quantity.
+        Plug in your constraints and see MOQ + demand visibility, total production cost, and where
+        your inputs conflict. Final planning and allocations unlock in the full decision view.
       </p>
 
       <div className="grid">
-        {/* LEFT – Inputs */}
+        {/* LEFT – Inputs (KEEP ALL) */}
         <div className="card">
           <div className="cardHeader">
             <h3 className="title">Production Inputs</h3>
@@ -447,8 +431,7 @@ export default function ProductionPlannerPage() {
               <label htmlFor="unitCost">Unit manufacturing cost</label>
               <input id="unitCost" type="number" step="0.01" defaultValue={0} />
               <p className="smallNote">
-                Full landed cost per unit (fabric, cut &amp; sew, trims, packaging,
-                etc.).
+                Full landed cost per unit (fabric, cut &amp; sew, trims, packaging, etc.).
               </p>
             </div>
             <div>
@@ -464,15 +447,12 @@ export default function ProductionPlannerPage() {
               <div>
                 <label htmlFor="moqPerStyle">MOQ per style (units)</label>
                 <input id="moqPerStyle" type="number" step={1} defaultValue={0} />
-                <p className="smallNote">
-                  For example: 50 pcs per style, or 80 pcs per colourway.
-                </p>
+                <p className="smallNote">For example: 50 pcs per style, or 80 pcs per colourway.</p>
               </div>
               <div>
                 <label>Calculated total MOQ units</label>
                 <p className="smallNote">
-                  <span id="totalMOQUnitsOut">0</span> units minimum across all
-                  styles.
+                  <span id="totalMOQUnitsOut">0</span> units minimum across all styles.
                 </p>
               </div>
             </div>
@@ -482,20 +462,14 @@ export default function ProductionPlannerPage() {
             <p className="sectionTitle">Demand &amp; safety stock</p>
             <div className="twoCol">
               <div>
-                <label htmlFor="demandUnits">
-                  Expected units sold for this drop
-                </label>
+                <label htmlFor="demandUnits">Expected units sold for this drop</label>
                 <input id="demandUnits" type="number" step={1} defaultValue={0} />
-                <p className="smallNote">
-                  Your best estimate of total units you can sell.
-                </p>
+                <p className="smallNote">Your best estimate of total units you can sell.</p>
               </div>
               <div>
                 <label htmlFor="safetyPct">Safety stock (%)</label>
                 <input id="safetyPct" type="number" step={1} defaultValue={20} />
-                <p className="smallNote">
-                  Extra buffer above demand (e.g. 20% = demand × 1.2).
-                </p>
+                <p className="smallNote">Extra buffer above demand (e.g. 20% = demand × 1.2).</p>
               </div>
             </div>
 
@@ -510,44 +484,22 @@ export default function ProductionPlannerPage() {
               <div>
                 <label htmlFor="budget">Max production budget</label>
                 <input id="budget" type="number" step="0.01" defaultValue={0} />
-                <p className="smallNote">
-                  Leave as 0 if you don&apos;t want the budget to cap your plan.
-                </p>
+                <p className="smallNote">Leave as 0 if you don&apos;t want the budget to cap anything.</p>
               </div>
               <div>
                 <label htmlFor="leadTime">Production lead time (weeks)</label>
                 <input id="leadTime" type="number" step={1} defaultValue={0} />
-                <p className="smallNote">
-                  For example: 6–8 weeks from deposit to finished goods.
-                </p>
+                <p className="smallNote">For example: 6–8 weeks from deposit to finished goods.</p>
               </div>
             </div>
           </div>
-
-          <div className="explain">
-            <p>
-              <strong>How this model works:</strong>
-            </p>
-            <p>
-              1️⃣ We calculate total MOQ units across all styles and your demand with
-              safety stock.
-            </p>
-            <p>
-              2️⃣ The base recommendation is the <strong>higher</strong> of MOQ or
-              demand&nbsp;+&nbsp;safety.
-            </p>
-            <p>
-              3️⃣ If you add a budget, we cap the plan so total production cost does
-              not exceed it.
-            </p>
-          </div>
         </div>
 
-        {/* RIGHT – Results */}
+        {/* RIGHT – Results (MATCH PAID LAYOUT, LOCK VALUES AS —) */}
         <div className="card">
           <div className="cardHeader">
             <h3 className="title">Plan &amp; MOQ Optimization</h3>
-            <span className="badge">Live</span>
+            <span className="badge">Free</span>
           </div>
 
           <p className="sectionTitle" style={{ marginTop: 0 }}>
@@ -555,26 +507,18 @@ export default function ProductionPlannerPage() {
           </p>
 
           <div className="row">
-            <span className="summaryLabel">
-              Base recommendation (MOQ vs demand)
-            </span>
-            <span className="summaryValue" id="baseRecommendedOut">
-              0
-            </span>
+            <span className="summaryLabel">Base recommendation (MOQ vs demand)</span>
+            <span className="summaryValue" id="baseRecommendedOut">—</span>
           </div>
 
           <div className="priceCard">
             <div className="priceRow">
               <span>Final planned units</span>
-              <span className="priceValue" id="plannedUnitsOut">
-                0
-              </span>
+              <span className="priceValue" id="plannedUnitsOut">—</span>
             </div>
             <div className="priceRow">
               <span>Planned units per style (avg)</span>
-              <span className="priceValue" id="plannedPerStyleOut">
-                0
-              </span>
+              <span className="priceValue" id="plannedPerStyleOut">—</span>
             </div>
           </div>
 
@@ -584,48 +528,44 @@ export default function ProductionPlannerPage() {
             </p>
             <div className="row">
               <span className="summaryLabel">Total production cost</span>
-              <span className="summaryValue" id="totalCostOut">
-                E£0.00
-              </span>
+              <span className="summaryValue" id="totalCostOut">E£0.00</span>
             </div>
             <div className="row">
               <span className="summaryLabel">Budget usage</span>
-              <span className="summaryValue" id="budgetUsageOut">
-                No budget limit
-              </span>
+              <span className="summaryValue" id="budgetUsageOut">—</span>
             </div>
             <div className="row">
               <span className="summaryLabel">Lead time</span>
-              <span className="summaryValue" id="leadTimeOut">
-                Not set
-              </span>
+              <span className="summaryValue" id="leadTimeOut">Not set</span>
             </div>
           </div>
 
-          {/* NEW (PAID): Conflicts between constraints */}
           <div className="divider">
             <p className="sectionTitle" style={{ marginTop: 0 }}>
               Conflicts between constraints
             </p>
             <div className="explain" id="conflictsOut">
-              <span style={{ opacity: 0.85 }}>
-                No conflicts detected from your current constraints.
-              </span>
+              <span style={{ opacity: 0.85 }}>No conflicts detected from your current constraints.</span>
             </div>
+
+            <p className="lockLine">
+              Final planned units, per-style splits, and recommendations unlock in the full decision view.
+            </p>
           </div>
 
           <div className="explain">
-            <p>
-              <strong>What&apos;s driving this plan?</strong>
-            </p>
-            <p id="driverOut">
-              Based on your inputs, demand + safety stock is driving your plan.
-            </p>
+            <p><strong>What&apos;s driving this plan?</strong></p>
+            <p id="driverOut">—</p>
             <p style={{ marginTop: 6 }}>
-              Use the <strong>final planned units</strong> and{" "}
-              <strong>units per style</strong> when talking to your manufacturer, and
-              make sure the plan still respects size curves and colourway splits.
+              Use the <strong>final planned units</strong> and <strong>units per style</strong> when talking to your
+              manufacturer, and make sure the plan still respects size curves and colourway splits.
             </p>
+          </div>
+
+          <div className="ctaWrap">
+            <Link className="ctaBtn" href="/plans">
+              Unlock full decision view
+            </Link>
           </div>
         </div>
       </div>
