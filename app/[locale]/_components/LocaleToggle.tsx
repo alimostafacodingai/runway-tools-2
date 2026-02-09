@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
-import {useLocale} from "next-intl";
-import {usePathname, useRouter} from "next/navigation";
+import { useLocale } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function LocaleToggle() {
   const locale = useLocale();
@@ -11,7 +11,7 @@ export default function LocaleToggle() {
   const nextLocale = locale === "en" ? "ar" : "en";
 
   function onToggle() {
-    // If you’re on /en/... or /ar/... swap that first segment
+    // If you're on /en/... or /ar/... swap that first segment
     const nextPath = pathname.replace(/^\/(en|ar)(?=\/|$)/, `/${nextLocale}`);
     router.push(nextPath);
     router.refresh();

@@ -12,10 +12,10 @@ export default function ProductionPlannerFreePage() {
 
   useEffect(() => {
     const SYMBOL: Record<string, string> = {
-      EGP: "E£",
+      EGP: "EÂ£",
       USD: "$",
       EUR: "€",
-      GBP: "£",
+      GBP: "Â£",
       AED: "AED ",
       SAR: "SAR ",
     };
@@ -515,7 +515,7 @@ export default function ProductionPlannerFreePage() {
             </p>
             <div className="row">
               <span className="summaryLabel">{t("results.totalCost")}</span>
-              <span className="summaryValue" id="totalCostOut">E£0.00</span>
+              <span className="summaryValue" id="totalCostOut">EÂ£0.00</span>
             </div>
             <div className="row">
               <span className="summaryLabel">{t("results.budgetUsageLabel")}</span>
@@ -558,3 +558,4 @@ export default function ProductionPlannerFreePage() {
     </div>
   );
 }
+

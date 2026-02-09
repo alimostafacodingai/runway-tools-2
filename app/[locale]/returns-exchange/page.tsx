@@ -180,15 +180,13 @@ export default function ReturnsExchangePage() {
 
   useEffect(() => {
     // add a class to body so styles don't affect the whole app globally
-    document.body.classList.add("runway-returns-page-body");
-
-    const SYMBOL: Record<string, string> = {
-      EGP: "EÂ£",
+    document.body.classList.add("runway-returns-page-body");    const SYMBOL: Record<string, string> = {
+      EGP: "E\u00a3",
       USD: "$",
-      EUR: "â‚¬",
-      GBP: "Â£",
-      AED: "Ø¯.Ø¥",
-      SAR: "ï·¼",
+      EUR: "\u20ac",
+      GBP: "\u00a3",
+      AED: "\u062f.\u0625",
+      SAR: "\u0631.\u0633",
     };
     let curr = "EGP";
 
@@ -497,19 +495,19 @@ export default function ReturnsExchangePage() {
           <div className="row">
             <span className="summaryLabel">{t("results.revenue")}</span>
             <span className="summaryValue" id="revOut">
-              EÂ£0.00
+              E£0.00
             </span>
           </div>
           <div className="row">
             <span className="summaryLabel">{t("results.nonAd")}</span>
             <span className="summaryValue" id="nonAdOut">
-              EÂ£0.00
+              E£0.00
             </span>
           </div>
           <div className="row">
             <span className="summaryLabel">{t("results.baseProfit")}</span>
             <span className="summaryValue" id="baseProfitOut">
-              EÂ£0.00
+              E£0.00
             </span>
           </div>
 
@@ -517,13 +515,13 @@ export default function ReturnsExchangePage() {
             <div className="priceRow">
               <span>{t("results.extraPerOrder")}</span>
               <span className="priceValue" id="extraPerOrderOut">
-                EÂ£0.00
+                E£0.00
               </span>
             </div>
             <div className="priceRow">
               <span>{t("results.profitAfter")}</span>
               <span className="priceValue" id="profitAfterOut">
-                EÂ£0.00
+                E£0.00
               </span>
             </div>
           </div>
@@ -577,19 +575,19 @@ export default function ReturnsExchangePage() {
             <div className="row">
               <span className="summaryLabel">{t("results.monthlyExtra")}</span>
               <span className="summaryValue" id="monthlyExtraOut">
-                EÂ£0.00
+                E£0.00
               </span>
             </div>
             <div className="row">
               <span className="summaryLabel">{t("results.monthlyBefore")}</span>
               <span className="summaryValue" id="monthlyProfitBeforeOut">
-                EÂ£0.00
+                E£0.00
               </span>
             </div>
             <div className="row">
               <span className="summaryLabel">{t("results.monthlyAfter")}</span>
               <span className="summaryValue" id="monthlyProfitAfterOut">
-                EÂ£0.00
+                E£0.00
               </span>
             </div>
           </div>

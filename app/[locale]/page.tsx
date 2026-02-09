@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import React from "react";
@@ -47,7 +47,7 @@ export default function Landing() {
               <span className="text-sm font-semibold tracking-tight">
                 {t("brandName")}
               </span>
-              <span className="text-lg">🚀</span>
+              <span className="text-lg">{"\u{1F680}"}</span>
             </div>
           </div>
         </div>
@@ -69,7 +69,7 @@ export default function Landing() {
       <section className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-6 pb-10 pt-14">
         {/* pill */}
         <div className="mb-10 rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm text-white/50 backdrop-blur">
-          <span className="mr-2">✨</span>
+          <span className="mr-2">{"\u{2728}"}</span>
           {t("hero.pill")}
         </div>
 
@@ -81,7 +81,7 @@ export default function Landing() {
         {/* rocket */}
         <div className="mt-5 grid place-items-center">
           <div className="animate-floatFast text-[40px] drop-shadow-[0_20px_40px_rgba(0,0,0,.7)]">
-            🚀
+            {"\u{1F680}"}
           </div>
         </div>
 
@@ -100,7 +100,7 @@ export default function Landing() {
           >
             {t("hero.ctaPlans")}
             <span className="opacity-90 transition group-hover:translate-x-0.5">
-              ↗
+              {"\u{2197}"}
             </span>
           </Link>
 
@@ -108,24 +108,24 @@ export default function Landing() {
             href={href("/tools")}
             className="inline-flex items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-4 text-sm font-semibold text-white/85 shadow-[0_12px_50px_rgba(0,0,0,.35)] backdrop-blur transition hover:bg-white/[0.06]"
           >
-            <span className="text-base">⚡</span> {t("hero.ctaFreeTools")}
+            <span className="text-base">{"\u{26A1}"}</span> {t("hero.ctaFreeTools")}
           </Link>
         </div>
 
         {/* Top feature cards */}
         <div className="mt-16 grid w-full grid-cols-1 gap-6 sm:grid-cols-3">
           <FeatureCard
-            icon="💰"
+            icon={"\u{1F4B0}"}
             title={t("features.f1Title")}
             desc={t("features.f1Desc")}
           />
           <FeatureCard
-            icon="📊"
+            icon={"\u{1F4CA}"}
             title={t("features.f2Title")}
             desc={t("features.f2Desc")}
           />
           <FeatureCard
-            icon="🚀"
+            icon={"\u{1F680}"}
             title={t("features.f3Title")}
             desc={t("features.f3Desc")}
           />
@@ -144,25 +144,25 @@ export default function Landing() {
 
           <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-4">
             <PillarCard
-              icon="💸"
+              icon="ðŸ’¸"
               title={t("toolkit.pricing.title")}
               desc={t("toolkit.pricing.desc")}
               bullets={pricingBullets}
             />
             <PillarCard
-              icon="📈"
+              icon={"\u{1F4C8}"}
               title={t("toolkit.cash.title")}
               desc={t("toolkit.cash.desc")}
               bullets={cashBullets}
             />
             <PillarCard
-              icon="🏭"
+              icon={"\u{1F3ED}"}
               title={t("toolkit.production.title")}
               desc={t("toolkit.production.desc")}
               bullets={prodBullets}
             />
             <PillarCard
-              icon="🧠"
+              icon={"\u{1F9E0}"}
               title={t("toolkit.growth.title")}
               desc={t("toolkit.growth.desc")}
               bullets={growthBullets}
@@ -182,22 +182,22 @@ export default function Landing() {
             {/* Value bullets */}
             <div className="space-y-6 lg:col-span-2">
               <DashboardPoint
-                icon="🟣"
+                icon={"\u{1F7E3}"}
                 title={t("dashboard.points.p1Title")}
                 desc={t("dashboard.points.p1Desc")}
               />
               <DashboardPoint
-                icon="🔵"
+                icon={"\u{1F535}"}
                 title={t("dashboard.points.p2Title")}
                 desc={t("dashboard.points.p2Desc")}
               />
               <DashboardPoint
-                icon="🟪"
+                icon={"\u{1F7EA}"}
                 title={t("dashboard.points.p3Title")}
                 desc={t("dashboard.points.p3Desc")}
               />
               <DashboardPoint
-                icon="⚡"
+              icon={"\u{26A1}"}
                 title={t("dashboard.points.p4Title")}
                 desc={t("dashboard.points.p4Desc")}
               />
@@ -387,19 +387,19 @@ export default function Landing() {
 
           <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
             <PillarCard
-              icon="🧾"
+              icon={"\u{1F9FE}"}
               title={t("templates.store.title")}
               desc={t("templates.store.desc")}
               bullets={tplStoreBullets}
             />
             <PillarCard
-              icon="🎯"
+              icon={"\u{1F3AF}"}
               title={t("templates.brand.title")}
               desc={t("templates.brand.desc")}
               bullets={tplBrandBullets}
             />
             <PillarCard
-              icon="✉️"
+              icon={"\u{2709}\u{FE0F}"}
               title={t("templates.marketing.title")}
               desc={t("templates.marketing.desc")}
               bullets={tplMktBullets}
@@ -741,3 +741,5 @@ function Shapes() {
     </div>
   );
 }
+
+

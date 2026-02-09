@@ -8,10 +8,10 @@ type CurrencyCode = "EGP" | "USD" | "EUR" | "GBP" | "AED" | "SAR";
 const CURRENCY_SYMBOLS: Record<CurrencyCode, string> = {
   EGP: "EÂ£",
   USD: "$",
-  EUR: "â‚¬",
+  EUR: "€",
   GBP: "Â£",
-  AED: "Ø¯.Ø¥",
-  SAR: "ï·¼",
+  AED: "Ã˜Â¯.Ã˜Â¥",
+  SAR: "Ã¯Â·Â¼",
 };
 
 function formatNumber(n: number) {
@@ -243,7 +243,7 @@ export default function RoasCalculatorPage() {
               <div className="flex items-center justify-between text-base">
                 <span>{t("results.beRoas")}</span>
                 <span className="font-extrabold">
-                  {beROAS > 0 ? `${formatNumber(beROAS)}Ã—` : "â€”"}
+                  {beROAS > 0 ? `${formatNumber(beROAS)}Ã—` : "—"}
                 </span>
               </div>
             </div>
@@ -280,7 +280,7 @@ export default function RoasCalculatorPage() {
               <div className="flex items-start justify-between gap-2">
                 <span className="text-[#cfd3ff]">{t("results.actualRoas")}</span>
                 <span className="font-semibold">
-                  {actualROAS > 0 ? `${formatNumber(actualROAS)}Ã—` : "â€”"}
+                  {actualROAS > 0 ? `${formatNumber(actualROAS)}Ã—` : "—"}
                 </span>
               </div>
             </div>
@@ -306,3 +306,4 @@ export default function RoasCalculatorPage() {
     </main>
   );
 }
+

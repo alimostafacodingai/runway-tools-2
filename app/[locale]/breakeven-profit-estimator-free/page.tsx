@@ -17,10 +17,10 @@ export default function BreakEvenFreePage() {
   const [targetProfit, setTargetProfit] = useState(0);
 
   const CURRENCIES = {
-    EGP: { symbol: "E£", label: t("currency.egp") },
+    EGP: { symbol: "EÂ£", label: t("currency.egp") },
     USD: { symbol: "$", label: t("currency.usd") },
     EUR: { symbol: "€", label: t("currency.eur") },
-    GBP: { symbol: "£", label: t("currency.gbp") },
+    GBP: { symbol: "Â£", label: t("currency.gbp") },
     SAR: { symbol: "SAR ", label: t("currency.sar") },
     AED: { symbol: "AED ", label: t("currency.aed") },
   } as const;
@@ -449,3 +449,4 @@ export default function BreakEvenFreePage() {
     </>
   );
 }
+

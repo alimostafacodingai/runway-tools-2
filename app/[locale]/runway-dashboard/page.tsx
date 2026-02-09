@@ -36,13 +36,11 @@ type Totals = {
 };
 
 export default function RunwayDashboardPage() {
-  const t = useTranslations("runwayDashboardPage");
-
-  const CURRENCIES = {
-    EGP: { symbol: "EÂ£", label: t("currency.egp") },
+  const t = useTranslations("runwayDashboardPage");  const CURRENCIES = {
+    EGP: { symbol: "E\u00a3", label: t("currency.egp") },
     USD: { symbol: "$", label: t("currency.usd") },
-    EUR: { symbol: "â‚¬", label: t("currency.eur") },
-    GBP: { symbol: "Â£", label: t("currency.gbp") },
+    EUR: { symbol: "\u20ac", label: t("currency.eur") },
+    GBP: { symbol: "\u00a3", label: t("currency.gbp") },
     SAR: { symbol: "SAR ", label: t("currency.sar") },
     AED: { symbol: "AED ", label: t("currency.aed") },
   } as const;

@@ -277,8 +277,7 @@ export default function BookkeepingPage() {
                         {tx.description}
                       </td>
                       <td className="px-3 py-2 text-zinc-400 text-xs">
-                        {categories.find((c) => c.id === tx.category)?.label ??
-                          tx.category}
+                        {categories.find((c) => c.id === tx.category)?.label ?? tx.category}
                       </td>
                       <td className="px-3 py-2 text-right">
                         {formatMoney(tx.amount)}

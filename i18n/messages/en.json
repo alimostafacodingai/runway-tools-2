@@ -1,234 +1,234 @@
-{
-  "nav": {
-    "tools": "Tools",
-    "pricing": "Pricing",
-    "login": "Log in",
-    "signup": "Sign up",
-    "logout": "Log out"
-  },
-
-  "auth": {
-    "email": "Email address",
-    "password": "Password",
-    "loginTitle": "Welcome back",
-    "signupTitle": "Create your account",
-    "submitLogin": "Log in",
-    "submitSignup": "Create account"
-  },
-
-  "common": {
-    "currency": "Currency",
-    "save": "Save",
-    "cancel": "Cancel",
-    "close": "Close",
-    "loading": "Loading...",
-    "comingSoon": "Coming soon"
-  },
-
-  "tool": {
-    "unlock": "Unlock full decision view",
-    "lockedHint": "This section is available in the paid plan",
-    "estimateNote": "Results are estimates and depend on your inputs",
-    "emptyState": "Enter values to see results"
-  },
-
-  "pricingCalculator": {
-    "title": "Pricing Calculator",
-    "totalCost": "Total cost",
-    "sellingPrice": "Selling price",
-    "grossMargin": "Gross margin",
-    "netProfit": "Net profit",
-    "units": "Units sold"
-  },
-
-  "landing": {
-    "headline": "Start your fashion brand with clarity",
-    "subheadline": "Know your costs, margins, and decisions before you spend a single pound.",
-    "ctaPrimary": "Open the Launch Kit",
-    "ctaSecondary": "Explore the tools",
-
-    "brandName": "Runway Tools",
-
-    "nav": {
-      "login": "Log in"
-    },
-
-    "hero": {
-      "pill": "The future of fashion business",
-      "subtitleLine1": "All-in-one fashion business toolkit —",
-      "subtitleLine2": "pricing, cash flow, and brand growth tools.",
-      "ctaPlans": "Explore Plans",
-      "ctaFreeTools": "Free Tools"
-    },
-
-    "features": {
-      "f1Title": "Pricing Calculator",
-      "f1Desc": "Optimal margins for your products",
-      "f2Title": "Cash Flow Tracker",
-      "f2Desc": "Real-time financial insights",
-      "f3Title": "Growth Tools",
-      "f3Desc": "Scale your fashion brand"
-    },
-
-    "toolkit": {
-      "pricing": {
-        "title": "Pricing & Profit",
-        "desc": "Know your true profit after costs, returns, and fees — not fake spreadsheet math.",
-        "bullets": ["Pricing (EGP)", "Income Statement", "Break-even targets"]
-      },
-      "cash": {
-        "title": "Cash & Planning",
-        "desc": "Spot negative months early so you don’t get trapped mid-production.",
-        "bullets": ["Cash flow tracker", "Monthly inflow/outflow", "Risk months"]
-      },
-      "production": {
-        "title": "Production & Costs",
-        "desc": "Avoid MOQ traps and over-ordering. Plan quantities based on reality.",
-        "bullets": ["Manufacturing cost", "Production planning", "Packaging impact"]
-      },
-      "growth": {
-        "title": "Growth Support",
-        "desc": "Make scaling decisions with data: ads, returns, pricing, and operations.",
-        "bullets": ["Returns impact", "ROAS/CPA break-even", "Growth decision support"]
-      }
-    },
-
-    "dashboard": {
-      "heading": {
-        "eyebrow": "Dashboard",
-        "title": "Your money control centre",
-        "subtitle": "Revenue, costs, profit, and what you keep in the business — updated live from your bookkeeping entries."
-      },
-      "points": {
-        "p1Title": "Live monthly summary",
-        "p1Desc": "Revenue, net profit, and retained profit for the selected month.",
-        "p2Title": "Profit structure clarity",
-        "p2Desc": "See exactly how sales turn into profit: Revenue → COGS → OPEX → Net profit.",
-        "p3Title": "Owner vs retained profit",
-        "p3Desc": "Know what you took out vs what stays in the brand to fund the next drops.",
-        "p4Title": "Trace every number",
-        "p4Desc": "Every total is backed by your transaction entries — no mystery math."
-      },
-      "mock": {
-        "kicker": "Runway Dashboard",
-        "title": "Live summary for January 2026",
-        "desc": "Based on your bookkeeping entries. This is your money control centre: revenue, costs, profit, and what you keep in the business.",
-        "stats": {
-          "s1Label": "Revenue this month",
-          "s1Value": "E£0.00",
-          "s1Hint": "Total sales (Sales revenue)",
-          "s2Label": "Net profit this month",
-          "s2Value": "E£-8,000.00",
-          "s2Hint": "After COGS and operating expenses",
-          "s3Label": "Retained profit",
-          "s3Value": "E£-8,000.00",
-          "s3Hint": "Net profit minus owner's withdrawals"
-        },
-        "panels": {
-          "p1Title": "Profit structure",
-          "p1Subtitle": "How your sales turn into profit this month.",
-          "p1Rows": {
-            "r1k": "Revenue",
-            "r1v": "E£0.00",
-            "r2k": "COGS (product costs)",
-            "r2v": "E£3,000.00",
-            "r3k": "Gross profit",
-            "r3v": "E£-3,000.00",
-            "r4k": "Operating expenses (OPEX)",
-            "r4v": "E£5,000.00",
-            "r5k": "Net profit",
-            "r5v": "E£-8,000.00"
-          },
-          "p1Foot": {
-            "f1": "Gross profit = Revenue − COGS (fabric, production, packaging, shipping-to-you).",
-            "f2": "Net profit = Gross profit − OPEX (marketing, rent, website, salaries, etc.)."
-          },
-
-          "p2Title": "Owner & retained profit",
-          "p2Subtitle": "How much you take out vs how much stays in the brand.",
-          "p2Rows": {
-            "r1k": "Net profit",
-            "r1v": "E£-8,000.00",
-            "r2k": "Owner's withdrawals",
-            "r2v": "E£0.00",
-            "r3k": "Retained profit",
-            "r3v": "E£-8,000.00"
-          },
-          "p2Foot": {
-            "f1": "Owner's withdrawals = money you take out for yourself (not a business expense).",
-            "f2": "Retained profit = Net profit − withdrawals. This funds the next drops."
-          }
-        },
-        "entries": {
-          "title": "This month's entries",
-          "count": "2 transactions",
-          "headers": {
-            "date": "Date",
-            "description": "Description",
-            "category": "Category",
-            "amount": "Amount"
-          },
-          "r1": {
-            "date": "2026-01-05",
-            "desc": "stock for summer drop",
-            "cat": "COGS — Materials / Fabric",
-            "amount": "E£3,000.00"
-          },
-          "r2": {
-            "date": "2026-01-05",
-            "desc": "rent for physical store - jan",
-            "cat": "OPEX — Rent / Utilities",
-            "amount": "E£5,000.00"
-          },
-          "note": "Edit your data from the Bookkeeping page. This dashboard is read-only and always reflects your latest entries."
-        }
-      }
-    },
-
-    "workflow": {
-      "heading": {
-        "eyebrow": "Workflow",
-        "title": "How founders use Runway Tools",
-        "subtitle": "Input real numbers → run core tools → check dashboard → make the best decision with the assistance of AI."
-      },
-      "steps": {
-        "s1Step": "01",
-        "s1Title": "Input real numbers",
-        "s1Desc": "Enter your real costs, prices, expenses, and bookkeeping entries — no guessing.",
-        "s2Step": "02",
-        "s2Title": "Run core tools",
-        "s2Desc": "Use pricing, cash flow, and profit tools to compute the real financial picture.",
-        "s3Step": "03",
-        "s3Title": "Check the dashboard",
-        "s3Desc": "See the live monthly summary: profit structure, retained profit, and entries.",
-        "s4Step": "04",
-        "s4Title": "Make the best decision with AI",
-        "s4Desc": "AI reads your dashboard + tools and tells you what to change first to improve profit and cash."
-      }
-    },
-
-    "templates": {
-      "heading": {
-        "eyebrow": "Templates Suite",
-        "title": "Not just calculators — execution templates",
-        "subtitle": "Templates that help you move faster and avoid costly mistakes while scaling."
-      },
-      "store": {
-        "title": "Store & Operations",
-        "desc": "Operational templates that remove friction and protect profit.",
-        "bullets": ["Refund policy", "AR/EN invoice/labels", "Business plan"]
-      },
-      "brand": {
-        "title": "Brand & Offers",
-        "desc": "Positioning + offers + content frameworks that convert.",
-        "bullets": ["Brand identity", "Content calendar", "Product descriptions"]
-      },
-      "marketing": {
-        "title": "Marketing Templates",
-        "desc": "Simple email flows that increase repeat purchases.",
-        "bullets": ["Email marketing", "Post-purchase flow", "Sizing clarity"]
-      },
-      "footerLine": "Clear inputs → instant outputs → next action."
+{
+  "nav": {
+    "tools": "Tools",
+    "pricing": "Pricing",
+    "login": "Log in",
+    "signup": "Sign up",
+    "logout": "Log out"
+  },
+
+  "auth": {
+    "email": "Email address",
+    "password": "Password",
+    "loginTitle": "Welcome back",
+    "signupTitle": "Create your account",
+    "submitLogin": "Log in",
+    "submitSignup": "Create account"
+  },
+
+  "common": {
+    "currency": "Currency",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "loading": "Loading...",
+    "comingSoon": "Coming soon"
+  },
+
+  "tool": {
+    "unlock": "Unlock full decision view",
+    "lockedHint": "This section is available in the paid plan",
+    "estimateNote": "Results are estimates and depend on your inputs",
+    "emptyState": "Enter values to see results"
+  },
+
+  "pricingCalculator": {
+    "title": "Pricing Calculator",
+    "totalCost": "Total cost",
+    "sellingPrice": "Selling price",
+    "grossMargin": "Gross margin",
+    "netProfit": "Net profit",
+    "units": "Units sold"
+  },
+
+  "landing": {
+    "headline": "Start your fashion brand with clarity",
+    "subheadline": "Know your costs, margins, and decisions before you spend a single pound.",
+    "ctaPrimary": "Open the Launch Kit",
+    "ctaSecondary": "Explore the tools",
+
+    "brandName": "Runway Tools",
+
+    "nav": {
+      "login": "Log in"
+    },
+
+    "hero": {
+      "pill": "The future of fashion business",
+      "subtitleLine1": "All-in-one fashion business toolkit —",
+      "subtitleLine2": "pricing, cash flow, and brand growth tools.",
+      "ctaPlans": "Explore Plans",
+      "ctaFreeTools": "Free Tools"
+    },
+
+    "features": {
+      "f1Title": "Pricing Calculator",
+      "f1Desc": "Optimal margins for your products",
+      "f2Title": "Cash Flow Tracker",
+      "f2Desc": "Real-time financial insights",
+      "f3Title": "Growth Tools",
+      "f3Desc": "Scale your fashion brand"
+    },
+
+    "toolkit": {
+      "pricing": {
+        "title": "Pricing & Profit",
+        "desc": "Know your true profit after costs, returns, and fees — not fake spreadsheet math.",
+        "bullets": ["Pricing (EGP)", "Income Statement", "Break-even targets"]
+      },
+      "cash": {
+        "title": "Cash & Planning",
+        "desc": "Spot negative months early so you don’t get trapped mid-production.",
+        "bullets": ["Cash flow tracker", "Monthly inflow/outflow", "Risk months"]
+      },
+      "production": {
+        "title": "Production & Costs",
+        "desc": "Avoid MOQ traps and over-ordering. Plan quantities based on reality.",
+        "bullets": ["Manufacturing cost", "Production planning", "Packaging impact"]
+      },
+      "growth": {
+        "title": "Growth Support",
+        "desc": "Make scaling decisions with data: ads, returns, pricing, and operations.",
+        "bullets": ["Returns impact", "ROAS/CPA break-even", "Growth decision support"]
+      }
+    },
+
+    "dashboard": {
+      "heading": {
+        "eyebrow": "Dashboard",
+        "title": "Your money control centre",
+        "subtitle": "Revenue, costs, profit, and what you keep in the business — updated live from your bookkeeping entries."
+      },
+      "points": {
+        "p1Title": "Live monthly summary",
+        "p1Desc": "Revenue, net profit, and retained profit for the selected month.",
+        "p2Title": "Profit structure clarity",
+        "p2Desc": "See exactly how sales turn into profit: Revenue → COGS → OPEX → Net profit.",
+        "p3Title": "Owner vs retained profit",
+        "p3Desc": "Know what you took out vs what stays in the brand to fund the next drops.",
+        "p4Title": "Trace every number",
+        "p4Desc": "Every total is backed by your transaction entries — no mystery math."
+      },
+      "mock": {
+        "kicker": "Runway Dashboard",
+        "title": "Live summary for January 2026",
+        "desc": "Based on your bookkeeping entries. This is your money control centre: revenue, costs, profit, and what you keep in the business.",
+        "stats": {
+          "s1Label": "Revenue this month",
+          "s1Value": "E£0.00",
+          "s1Hint": "Total sales (Sales revenue)",
+          "s2Label": "Net profit this month",
+          "s2Value": "E£-8,000.00",
+          "s2Hint": "After COGS and operating expenses",
+          "s3Label": "Retained profit",
+          "s3Value": "E£-8,000.00",
+          "s3Hint": "Net profit minus owner's withdrawals"
+        },
+        "panels": {
+          "p1Title": "Profit structure",
+          "p1Subtitle": "How your sales turn into profit this month.",
+          "p1Rows": {
+            "r1k": "Revenue",
+            "r1v": "E£0.00",
+            "r2k": "COGS (product costs)",
+            "r2v": "E£3,000.00",
+            "r3k": "Gross profit",
+            "r3v": "E£-3,000.00",
+            "r4k": "Operating expenses (OPEX)",
+            "r4v": "E£5,000.00",
+            "r5k": "Net profit",
+            "r5v": "E£-8,000.00"
+          },
+          "p1Foot": {
+            "f1": "Gross profit = Revenue - COGS (fabric, production, packaging, shipping-to-you).",
+            "f2": "Net profit = Gross profit - OPEX (marketing, rent, website, salaries, etc.)."
+          },
+
+          "p2Title": "Owner & retained profit",
+          "p2Subtitle": "How much you take out vs how much stays in the brand.",
+          "p2Rows": {
+            "r1k": "Net profit",
+            "r1v": "E£-8,000.00",
+            "r2k": "Owner's withdrawals",
+            "r2v": "E£0.00",
+            "r3k": "Retained profit",
+            "r3v": "E£-8,000.00"
+          },
+          "p2Foot": {
+            "f1": "Owner's withdrawals = money you take out for yourself (not a business expense).",
+            "f2": "Retained profit = Net profit - withdrawals. This funds the next drops."
+          }
+        },
+        "entries": {
+          "title": "This month's entries",
+          "count": "2 transactions",
+          "headers": {
+            "date": "Date",
+            "description": "Description",
+            "category": "Category",
+            "amount": "Amount"
+          },
+          "r1": {
+            "date": "2026-01-05",
+            "desc": "stock for summer drop",
+            "cat": "COGS — Materials / Fabric",
+            "amount": "E£3,000.00"
+          },
+          "r2": {
+            "date": "2026-01-05",
+            "desc": "rent for physical store - jan",
+            "cat": "OPEX — Rent / Utilities",
+            "amount": "E£5,000.00"
+          },
+          "note": "Edit your data from the Bookkeeping page. This dashboard is read-only and always reflects your latest entries."
+        }
+      }
+    },
+
+    "workflow": {
+      "heading": {
+        "eyebrow": "Workflow",
+        "title": "How founders use Runway Tools",
+        "subtitle": "Input real numbers → run core tools → check dashboard → make the best decision with the assistance of AI."
+      },
+      "steps": {
+        "s1Step": "01",
+        "s1Title": "Input real numbers",
+        "s1Desc": "Enter your real costs, prices, expenses, and bookkeeping entries — no guessing.",
+        "s2Step": "02",
+        "s2Title": "Run core tools",
+        "s2Desc": "Use pricing, cash flow, and profit tools to compute the real financial picture.",
+        "s3Step": "03",
+        "s3Title": "Check the dashboard",
+        "s3Desc": "See the live monthly summary: profit structure, retained profit, and entries.",
+        "s4Step": "04",
+        "s4Title": "Make the best decision with AI",
+        "s4Desc": "AI reads your dashboard + tools and tells you what to change first to improve profit and cash."
+      }
+    },
+
+    "templates": {
+      "heading": {
+        "eyebrow": "Templates Suite",
+        "title": "Not just calculators — execution templates",
+        "subtitle": "Templates that help you move faster and avoid costly mistakes while scaling."
+      },
+      "store": {
+        "title": "Store & Operations",
+        "desc": "Operational templates that remove friction and protect profit.",
+        "bullets": ["Refund policy", "AR/EN invoice/labels", "Business plan"]
+      },
+      "brand": {
+        "title": "Brand & Offers",
+        "desc": "Positioning + offers + content frameworks that convert.",
+        "bullets": ["Brand identity", "Content calendar", "Product descriptions"]
+      },
+      "marketing": {
+        "title": "Marketing Templates",
+        "desc": "Simple email flows that increase repeat purchases.",
+        "bullets": ["Email marketing", "Post-purchase flow", "Sizing clarity"]
+      },
+      "footerLine": "Clear inputs → instant outputs → next action."
     }
   },
 
@@ -593,7 +593,7 @@
     ],
     "formula": {
       "opening": "Opening Cash",
-      "net": "Net Cash Flow (Inflows − Outflows)",
+      "net": "Net Cash Flow (Inflows - Outflows)",
       "closing": "Closing Cash"
     },
     "card": {
@@ -608,7 +608,7 @@
     "summary": {
       "net": {
         "title": "Net Cash Flow",
-        "note": "(Total Inflows − Total Outflows)"
+        "note": "(Total Inflows - Total Outflows)"
       },
       "closing": {
         "title": "Closing Cash"
@@ -617,7 +617,7 @@
     "help": {
       "q1": {
         "title": "What is monthly cash flow?",
-        "body": "Cash flow = cash received − cash paid. It shows if your business generated or lost cash in this month."
+        "body": "Cash flow = cash received - cash paid. It shows if your business generated or lost cash in this month."
       },
       "q2": {
         "title": "Opening Cash:",
@@ -900,7 +900,7 @@
       "inbound": "Inbound Shipping",
       "other": "Other Product Costs",
       "total": "Total Cost of Sales (COGS)",
-      "gross": "Gross Profit (Sales Revenue − COGS)",
+      "gross": "Gross Profit (Sales Revenue - COGS)",
       "note": "COGS = product costs required to make/deliver items (fabric, stitching, packaging, labeling, shipping-to-you)."
     },
     "opex": {
@@ -912,14 +912,14 @@
       "salaries": "Salaries / Freelancers",
       "other": "Other OPEX",
       "total": "Total OPEX",
-      "net": "Net Profit (Gross Profit − OPEX)",
+      "net": "Net Profit (Gross Profit - OPEX)",
       "note": "OPEX = day-to-day costs to run the brand (marketing, rent, website fees, salaries, utilities)."
     },
     "owner": {
       "title": "Owner",
       "badge": "Equity",
       "drawings": "Owner's Withdrawals",
-      "retained": "Retained Profit (Net Profit − Drawings)",
+      "retained": "Retained Profit (Net Profit - Drawings)",
       "explain": {
         "drawingsTitle": "Owner's Withdrawals:",
         "drawingsBody": "the money that the owner takes from the Net Profit for personal use. It's not a business expense, it's simply money taken out of the company by the owner.",
@@ -1263,13 +1263,13 @@
     }
   },
   "manufacturerCostPage": {
-    "title": "RunwayToRevenue â€“ Manufacturing Cost Tool",
+    "title": "RunwayToRevenue – Manufacturing Cost Tool",
     "subtitle": "Use this before you send money to a factory. Enter the quantity, per-unit costs (fabric, cut & sew, prints, trims, packaging) and order-level costs (shipping, duty, other). The tool will give you your real all-in cost per unit and total order cost.",
     "currency": {
-      "egp": "EGP (EÂ£)",
+      "egp": "EGP (E£)",
       "usd": "USD ($)",
-      "eur": "EUR (â‚¬)",
-      "gbp": "GBP (Â£)",
+      "eur": "EUR (€)",
+      "gbp": "GBP (£)",
       "sar": "SAR (SAR)",
       "aed": "AED (AED)"
     },
@@ -1305,31 +1305,31 @@
       "title": "Cost Summary",
       "currencyLabel": "Currency",
       "badge": "All-in",
-      "note": "Numbers below update automatically as you type. Currency is shown as {symbol} by default â€“ just think in the same currency you use in your pricing and income statement tools.",
+      "note": "Numbers below update automatically as you type. Currency is shown as {symbol} by default – just think in the same currency you use in your pricing and income statement tools.",
       "units": "Units in order",
       "perUnitSum": "Sum of per-unit costs",
-      "variableTotal": "Total variable (per-unit Ã— units)",
+      "variableTotal": "Total variable (per-unit × units)",
       "orderLevelTotal": "Total order-level costs",
       "allInPerUnit": "All-in cost per unit",
       "allInTotal": "Total order cost (all-in)",
-      "allInNote": "All-in cost per unit = (total per-unit costs Ã— units + all order-level costs) Ã· units. Use this number inside your pricing calculator.",
+      "allInNote": "All-in cost per unit = (total per-unit costs × units + all order-level costs) ÷ units. Use this number inside your pricing calculator.",
       "breakdownTitle": "Per-unit breakdown",
       "basePerUnit": "Base per-unit costs (fabric, cut & sew, etc.)",
-      "overheadPerUnit": "Order overhead per unit (shipping, duty, other Ã· units)",
+      "overheadPerUnit": "Order overhead per unit (shipping, duty, other ÷ units)",
       "breakdownNote": "Base per-unit + overhead per-unit = all-in cost per unit. If you raise or lower your quantity, overhead per unit will change a lot."
     }
   },
   "productionPlannerPage": {
-    "title": "RunwayToRevenue â€“ Production Planner & MOQ Optimizer",
+    "title": "RunwayToRevenue – Production Planner & MOQ Optimizer",
     "subtitle": "Plan your next drop based on MOQ, demand, and budget. This tool shows you your recommended units, total cost, conflicts, and what is driving the recommendation.",
     "currency": {
       "label": "Currency",
-      "egp": "EGP â€“ Egyptian Pound",
-      "usd": "USD â€“ US Dollar",
-      "eur": "EUR â€“ Euro",
-      "gbp": "GBP â€“ British Pound",
-      "aed": "AED â€“ UAE Dirham",
-      "sar": "SAR â€“ Saudi Riyal",
+      "egp": "EGP – Egyptian Pound",
+      "usd": "USD – US Dollar",
+      "eur": "EUR – Euro",
+      "gbp": "GBP – British Pound",
+      "aed": "AED – UAE Dirham",
+      "sar": "SAR – Saudi Riyal",
       "hint": "Use the same currency you use in your pricing & manufacturing tools."
     },
     "inputs": {
@@ -1371,7 +1371,7 @@
       "title": "How the recommendation works:",
       "step1": "1) We take the higher of (total MOQ units) and (demand + safety stock).",
       "step2": "2) If you set a budget, we cap units so total cost does not exceed your budget.",
-      "step3": "3) We show conflicts when MOQ, demand, or budget donâ€™t match."
+      "step3": "3) We show conflicts when MOQ, demand, or budget don’t match."
     },
     "results": {
       "title": "Results",
@@ -1408,16 +1408,16 @@
     }
   },
   "productionPlannerFreePage": {
-    "title": "RunwayToRevenue â€“ Production Planner & MOQ Optimizer",
+    "title": "RunwayToRevenue – Production Planner & MOQ Optimizer",
     "subtitle": "See your MOQ vs demand visibility and estimated total cost. Full recommendations and decision logic unlock in the paid plan.",
     "currency": {
       "label": "Currency",
-      "egp": "EGP â€“ Egyptian Pound",
-      "usd": "USD â€“ US Dollar",
-      "eur": "EUR â€“ Euro",
-      "gbp": "GBP â€“ British Pound",
-      "aed": "AED â€“ UAE Dirham",
-      "sar": "SAR â€“ Saudi Riyal",
+      "egp": "EGP – Egyptian Pound",
+      "usd": "USD – US Dollar",
+      "eur": "EUR – Euro",
+      "gbp": "GBP – British Pound",
+      "aed": "AED – UAE Dirham",
+      "sar": "SAR – Saudi Riyal",
       "hint": "Use the same currency you use in your pricing & manufacturing tools."
     },
     "inputs": {
@@ -1488,16 +1488,16 @@
     }
   },
   "returnsExchangePage": {
-    "title": "RunwayToRevenue â€“ Returns / Exchange Cost Model",
+    "title": "RunwayToRevenue – Returns / Exchange Cost Model",
     "subtitle": "This model shows how returns and exchanges eat into your profit. It calculates the extra cost per order and for a full month, based on your return rate, exchange rate and handling costs.",
     "currency": {
       "label": "Currency",
-      "egp": "EGP â€“ Egyptian Pound",
-      "usd": "USD â€“ US Dollar",
-      "eur": "EUR â€“ Euro",
-      "gbp": "GBP â€“ British Pound",
-      "aed": "AED â€“ UAE Dirham",
-      "sar": "SAR â€“ Saudi Riyal",
+      "egp": "EGP – Egyptian Pound",
+      "usd": "USD – US Dollar",
+      "eur": "EUR – Euro",
+      "gbp": "GBP – British Pound",
+      "aed": "AED – UAE Dirham",
+      "sar": "SAR – Saudi Riyal",
       "hint": "Use the same currency you use in your pricing & income statement tools."
     },
     "inputs": {
@@ -1532,7 +1532,7 @@
       "shipping": "Return shipping label per return",
       "handling": "Processing / restock cost per return",
       "loss": "Average value lost per return",
-      "note": "Value lost can be discounts, damaged pieces, or stock you canâ€™t resell."
+      "note": "Value lost can be discounts, damaged pieces, or stock you can’t resell."
     },
     "costExchange": {
       "title": "Cost per Exchange",
@@ -1542,7 +1542,7 @@
     },
     "explain": {
       "title": "How this model works:",
-      "step1": "1) We first calculate your base profit per order = AOV âˆ’ (product + fulfilment + other variable costs).",
+      "step1": "1) We first calculate your base profit per order = AOV - (product + fulfilment + other variable costs).",
       "step2": "2) Then we add the expected cost of returns & exchanges per order, based on your return rate, exchange rate and handling costs.",
       "step3": "3) Finally we show your profit after returns/exchanges per order and the total monthly impact."
     },
@@ -1566,20 +1566,20 @@
       "monthlyExtra": "Extra monthly cost from returns & exchanges",
       "monthlyBefore": "Monthly profit before returns",
       "monthlyAfter": "Monthly profit after returns",
-      "tip": "Tip: combine this with your ROAS / CPA Break-Even Calculator and Manufacturing Cost Tool to see the full picture: product cost â†’ returns & exchanges â†’ ads â†’ final profit."
+      "tip": "Tip: combine this with your ROAS / CPA Break-Even Calculator and Manufacturing Cost Tool to see the full picture: product cost ? returns & exchanges ? ads ? final profit."
     }
   },
   "roasCpaPage": {
-    "title": "RunwayToRevenue â€“ ROAS / CPA Break-Even Calculator",
+    "title": "RunwayToRevenue – ROAS / CPA Break-Even Calculator",
     "subtitle": "This tool shows your break-even CPA and break-even ROAS, then compares them with your actual CPA and ROAS. Use the same inputs you use in your pricing calculator: average order value, cost per order, and ad spend per order.",
     "currency": {
       "label": "Currency",
-      "egp": "EGP â€“ Egyptian Pound",
-      "usd": "USD â€“ US Dollar",
-      "eur": "EUR â€“ Euro",
-      "gbp": "GBP â€“ British Pound",
-      "aed": "AED â€“ UAE Dirham",
-      "sar": "SAR â€“ Saudi Riyal",
+      "egp": "EGP – Egyptian Pound",
+      "usd": "USD – US Dollar",
+      "eur": "EUR – Euro",
+      "gbp": "GBP – British Pound",
+      "aed": "AED – UAE Dirham",
+      "sar": "SAR – Saudi Riyal",
       "hint": "Use the same currency you use in your pricing & income statement tools."
     },
     "inputs": {
@@ -1603,14 +1603,14 @@
       },
       "cpa": {
         "label": "CPA (Cost per Attribute)",
-        "note": "In this calculator, the attribute = purchase. So this CPA is how much you pay in ads to get one order (total ad spend Ã· number of purchases)."
+        "note": "In this calculator, the attribute = purchase. So this CPA is how much you pay in ads to get one order (total ad spend ÷ number of purchases)."
       }
     },
     "explain": {
-      "p1": "What does â€œprofit before adsâ€ mean? Itâ€™s your revenue per order minus all non-ad costs (product, packaging, shipping-to-customer, payment fees, etc.). Basically: â€œIf I spent zero on ads, how much profit would I make from one order?â€",
-      "p2": "ROAS (Return on Ad Spend) = Revenue Ã· Ad Spend. Here we look at it per order as AOV Ã· CPA, where CPA (cost per attribute) is the ad cost for one purchase (one completed order).",
-      "p3": "Break-even CPA is your profit before ads per order. If your real CPA is lower than this, you still keep profit. If itâ€™s higher, you lose money on each order.",
-      "p4": "Example: AOV = 1000, non-ad costs = 500 â‡’ profit before ads = 500 (this is your break-even CPA). If CPA = 300 â‡’ profit after ads = 200 (good). If CPA = 500 â‡’ break-even. If CPA = 700 â‡’ you lose 200 per order."
+      "p1": "What does “profit before ads” mean? It’s your revenue per order minus all non-ad costs (product, packaging, shipping-to-customer, payment fees, etc.). Basically: “If I spent zero on ads, how much profit would I make from one order?”",
+      "p2": "ROAS (Return on Ad Spend) = Revenue ÷ Ad Spend. Here we look at it per order as AOV ÷ CPA, where CPA (cost per attribute) is the ad cost for one purchase (one completed order).",
+      "p3": "Break-even CPA is your profit before ads per order. If your real CPA is lower than this, you still keep profit. If it’s higher, you lose money on each order.",
+      "p4": "Example: AOV = 1000, non-ad costs = 500 ? profit before ads = 500 (this is your break-even CPA). If CPA = 300 ? profit after ads = 200 (good). If CPA = 500 ? break-even. If CPA = 700 ? you lose 200 per order."
     },
     "results": {
       "title": "Results",
@@ -1625,7 +1625,7 @@
       "actualCpa": "Actual CPA (input)",
       "afterAds": "Profit per order after ads",
       "marginAfter": "Profit margin after ads",
-      "actualRoas": "Actual ROAS (AOV Ã· CPA)",
+      "actualRoas": "Actual ROAS (AOV ÷ CPA)",
       "targetTitle": "Target margin check",
       "maxCpa": "Max CPA for target margin",
       "statusLabel": "Is your current CPA ok?",
@@ -1634,21 +1634,21 @@
     "status": {
       "noTarget": "No target margin set.",
       "enterCpa": "Enter a CPA to compare with your target margin.",
-      "ok": "âœ… Your CPA supports your target margin.",
-      "high": "âš ï¸ CPA is too high for your target margin."
+      "ok": "? Your CPA supports your target margin.",
+      "high": "?? CPA is too high for your target margin."
     }
   },
   "roasCalculatorPage": {
-    "title": "RunwayToRevenue â€“ ROAS / CPA Break-Even Calculator",
+    "title": "RunwayToRevenue – ROAS / CPA Break-Even Calculator",
     "subtitle": "This tool shows your break-even CPA and break-even ROAS, then compares them with your actual CPA and ROAS. Use the same inputs you use in your pricing calculator: average order value, cost per order, and ad spend per order.",
     "currency": {
       "label": "Currency",
-      "egp": "EGP â€“ Egyptian Pound",
-      "usd": "USD â€“ US Dollar",
-      "eur": "EUR â€“ Euro",
-      "gbp": "GBP â€“ British Pound",
-      "aed": "AED â€“ UAE Dirham",
-      "sar": "SAR â€“ Saudi Riyal",
+      "egp": "EGP – Egyptian Pound",
+      "usd": "USD – US Dollar",
+      "eur": "EUR – Euro",
+      "gbp": "GBP – British Pound",
+      "aed": "AED – UAE Dirham",
+      "sar": "SAR – Saudi Riyal",
       "hint": "Use the same currency you use in your pricing & income statement tools."
     },
     "inputs": {
@@ -1672,14 +1672,14 @@
       },
       "cpa": {
         "label": "CPA (Cost per Attribute)",
-        "note": "In this calculator, the attribute = purchase. So this CPA is how much you pay in ads to get one order (total ad spend Ã· number of purchases)."
+        "note": "In this calculator, the attribute = purchase. So this CPA is how much you pay in ads to get one order (total ad spend ÷ number of purchases)."
       }
     },
     "explain": {
-      "p1": "What does â€œprofit before adsâ€ mean? Itâ€™s your revenue per order minus all non-ad costs (product, packaging, shipping-to-customer, payment fees, etc.). Basically: â€œIf I spent zero on ads, how much profit would I make from one order?â€",
-      "p2": "ROAS (Return on Ad Spend) = Revenue Ã· Ad Spend. Here we look at it per order as AOV Ã· CPA, where CPA (cost per attribute) is the ad cost for one purchase (one completed order).",
-      "p3": "Break-even CPA is your profit before ads per order. If your real CPA is lower than this, you still keep profit. If itâ€™s higher, you lose money on each order.",
-      "p4": "Example: AOV = 1000, non-ad costs = 500 â‡’ profit before ads = 500 (this is your break-even CPA). If CPA = 300 â‡’ profit after ads = 200 (good). If CPA = 500 â‡’ break-even. If CPA = 700 â‡’ you lose 200 per order."
+      "p1": "What does “profit before ads” mean? It’s your revenue per order minus all non-ad costs (product, packaging, shipping-to-customer, payment fees, etc.). Basically: “If I spent zero on ads, how much profit would I make from one order?”",
+      "p2": "ROAS (Return on Ad Spend) = Revenue ÷ Ad Spend. Here we look at it per order as AOV ÷ CPA, where CPA (cost per attribute) is the ad cost for one purchase (one completed order).",
+      "p3": "Break-even CPA is your profit before ads per order. If your real CPA is lower than this, you still keep profit. If it’s higher, you lose money on each order.",
+      "p4": "Example: AOV = 1000, non-ad costs = 500 ? profit before ads = 500 (this is your break-even CPA). If CPA = 300 ? profit after ads = 200 (good). If CPA = 500 ? break-even. If CPA = 700 ? you lose 200 per order."
     },
     "results": {
       "title": "Results",
@@ -1694,7 +1694,7 @@
       "actualCpa": "Actual CPA (input)",
       "afterAds": "Profit per order after ads",
       "marginAfter": "Profit margin after ads",
-      "actualRoas": "Actual ROAS (AOV Ã· CPA)",
+      "actualRoas": "Actual ROAS (AOV ÷ CPA)",
       "targetTitle": "Target margin check",
       "maxCpa": "Max CPA for target margin",
       "statusLabel": "Is your current CPA ok?",
@@ -1703,8 +1703,8 @@
     "status": {
       "noTarget": "No target margin set.",
       "enterCpa": "Enter a CPA to compare with your target margin.",
-      "ok": "âœ… Your CPA supports your target margin.",
-      "high": "âš ï¸ CPA is too high for your target margin."
+      "ok": "? Your CPA supports your target margin.",
+      "high": "?? CPA is too high for your target margin."
     }
   },
   "runwayDashboardPage": {
@@ -1718,10 +1718,10 @@
     },
     "currency": {
       "label": "Currency",
-      "egp": "EGP (EÂ£)",
+      "egp": "EGP (E£)",
       "usd": "USD ($)",
-      "eur": "EUR (â‚¬)",
-      "gbp": "GBP (Â£)",
+      "eur": "EUR (€)",
+      "gbp": "GBP (£)",
       "sar": "SAR (SAR)",
       "aed": "AED (AED)"
     },
@@ -1750,8 +1750,8 @@
         "net": "Net profit"
       },
       "notes": {
-        "gross": "â€¢ Gross profit = Revenue âˆ’ COGS (fabric, production, packaging, shipping-to-you).",
-        "net": "â€¢ Net profit = Gross profit âˆ’ OPEX (marketing, rent, website, salaries, etc.)."
+        "gross": "• Gross profit = Revenue - COGS (fabric, production, packaging, shipping-to-you).",
+        "net": "• Net profit = Gross profit - OPEX (marketing, rent, website, salaries, etc.)."
       }
     },
     "owner": {
@@ -1763,8 +1763,8 @@
         "retained": "Retained profit"
       },
       "notes": {
-        "drawings": "â€¢ Owner's withdrawals = money you take out for yourself (not a business expense).",
-        "retained": "â€¢ Retained profit = Net profit âˆ’ withdrawals. This is what stays in the company to fund the next drops."
+        "drawings": "• Owner's withdrawals = money you take out for yourself (not a business expense).",
+        "retained": "• Retained profit = Net profit - withdrawals. This is what stays in the company to fund the next drops."
       }
     },
     "table": {
@@ -1781,21 +1781,21 @@
     },
     "categories": {
       "sales": "Sales revenue",
-      "c_mat": "COGS â€“ Materials / Fabric",
-      "c_lab": "COGS â€“ Labor / Production",
-      "c_pack": "COGS â€“ Packaging & Labels",
-      "c_inb": "COGS â€“ Inbound Shipping",
-      "c_other": "COGS â€“ Other Product Costs",
-      "o_mkt": "OPEX â€“ Marketing / Ads",
-      "o_web": "OPEX â€“ Website & Apps",
-      "o_rent": "OPEX â€“ Rent / Utilities",
-      "o_sal": "OPEX â€“ Salaries / Freelancers",
-      "o_other": "OPEX â€“ Other Operating Expenses",
+      "c_mat": "COGS – Materials / Fabric",
+      "c_lab": "COGS – Labor / Production",
+      "c_pack": "COGS – Packaging & Labels",
+      "c_inb": "COGS – Inbound Shipping",
+      "c_other": "COGS – Other Product Costs",
+      "o_mkt": "OPEX – Marketing / Ads",
+      "o_web": "OPEX – Website & Apps",
+      "o_rent": "OPEX – Rent / Utilities",
+      "o_sal": "OPEX – Salaries / Freelancers",
+      "o_other": "OPEX – Other Operating Expenses",
       "drawings": "Owner's Withdrawals"
     }
   },
   "mentorPage": {
-    "starter": "Tell me what youâ€™re building â€” product, audience, and your current bottleneck.",
+    "starter": "Tell me what you’re building — product, audience, and your current bottleneck.",
     "chips": {
       "pricing": "Pricing",
       "positioning": "Positioning",
@@ -1807,17 +1807,17 @@
       "kicker": "AI Fashion Mentor",
       "title": "Ask your mentor.\nGet a plan you can execute.",
       "subtitle": "Strategy + steps + numbers. No fluff.",
-      "placeholder": "Type your questionâ€¦ (Enter to send, Shift+Enter for newline)",
+      "placeholder": "Type your question… (Enter to send, Shift+Enter for newline)",
       "send": "Send",
-      "sending": "â€¦",
+      "sending": "…",
       "note": "After your first message, the page switches to a full chat layout.",
       "chipFill": "Help me with {topic} for my fashion brand."
     },
     "chat": {
       "title": "AI Fashion Mentor",
       "new": "New chat",
-      "thinking": "Thinkingâ€¦",
-      "placeholder": "Message AI Fashion Mentorâ€¦",
+      "thinking": "Thinking…",
+      "placeholder": "Message AI Fashion Mentor…",
       "send": "Send"
     },
     "errors": {
@@ -1827,3 +1827,6 @@
     }
   }
 }
+
+
+

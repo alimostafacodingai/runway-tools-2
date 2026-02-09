@@ -23,7 +23,7 @@ export default function CashflowCalculatorPage() {
 
   const symbol = useMemo(() => {
     const found = currencies.find((c) => c.code === currency);
-    return found?.symbol ?? currency;
+    return found?.symbol ?? "";
   }, [currency, currencies]);
 
   const parseNumber = (v: string) => {

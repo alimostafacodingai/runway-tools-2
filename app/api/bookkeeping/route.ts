@@ -45,10 +45,7 @@ export async function GET(_req: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      { entries: data ?? [] },
-      { status: 200 }
-    );
+    return NextResponse.json({ entries: data ?? [] }, { status: 200 });
   } catch (err) {
     console.error("GET /api/bookkeeping unexpected error:", err);
     return NextResponse.json(
