@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
 
     const password_hash = hashPassword(password);
 
+    // Look up user in Supabase
     const { data: user, error } = await supabaseServer
       .from("users")
       .select("id, email, plan")
@@ -46,6 +47,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
+    // Cookies for frontend
     res.cookies.set("user_email", user.email, {
       path: "/",
       httpOnly: true,
